@@ -14,5 +14,13 @@ Super(ObjectInitializer)
 	{
 		PlayerControllerClass = (UClass*)topDownBluePrint.Object->GeneratedClass;
 	}
+
+
+
+	static ConstructorHelpers::FObjectFinder<UBlueprint> characterBluePrint(TEXT("Blueprint'/Game/Blueprints/PlayerCharacter.PlayerCharacter'"));
+	if (characterBluePrint.Object != NULL)
+	{
+		DefaultPawnClass = (UClass*)characterBluePrint.Object->GeneratedClass;
+	}
 }
 
