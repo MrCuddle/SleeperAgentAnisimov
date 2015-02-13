@@ -15,5 +15,6 @@ class SLEEPERAGENTANISIMOV_API ASleeperAgentAnisimovGameMode : public AGameMode
 	
 	
 	
-	
+		
 };
+
