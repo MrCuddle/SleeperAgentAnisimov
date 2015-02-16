@@ -1,0 +1,48 @@
+﻿Merge remote-tracking branch 'origin/Weapons-and-Character'
+
+Conflicts:
+	Content/StarterContent/Minimal_Default.umap
+	SleeperAgentAnisimov.sdf
+	SleeperAgentAnisimov.v12.suo
+#
+# It looks like you may be committing a merge.
+# If this is not correct, please remove the file
+#	.git/MERGE_HEAD
+# and try again.
+
+
+# Please enter the commit message for your changes. Lines starting
+# with '#' will be ignored, and an empty message aborts the commit.
+# On branch master
+# Your branch is behind 'origin/master' by 2 commits, and can be fast-forwarded.
+#   (use "git pull" to update your local branch)
+#
+# All conflicts fixed but you are still merging.
+#
+# Changes to be committed:
+#	modified:   Config/DefaultInput.ini
+#	new file:   Content/Animations/Idle.uasset
+#	new file:   Content/Animations/Jump_End.uasset
+#	new file:   Content/Animations/Jump_Loop.uasset
+#	new file:   Content/Animations/Jump_Start.uasset
+#	new file:   Content/Animations/Run.uasset
+#	new file:   Content/Animations/Walk.uasset
+#	new file:   Content/Blueprints/MyCharacter.uasset
+#	modified:   Content/Blueprints/PlayerCharacter.uasset
+#	modified:   Content/Blueprints/TopDownController.uasset
+#	new file:   Content/Character/HeroTPP.uasset
+#	new file:   Content/Character/HeroTPP_AnimBlueprint.uasset
+#	new file:   Content/Character/HeroTPP_Skeleton.uasset
+#	new file:   Content/Character/IdleRun_TPP.uasset
+#	new file:   Content/Items/NewBlueprint.uasset
+#	new file:   Content/Models/Player/HeroTPP.uasset
+#	new file:   Content/Models/Player/HeroTPP_Skeleton.uasset
+#	new file:   Content/Models/Player/Idle.uasset
+#	new file:   Content/Models/Player/Jump_Loop.uasset
+#	deleted:    Content/StarterContent/Minimal_Default.umap
+#	deleted:    SleeperAgentAnisimov.sdf
+#	deleted:    SleeperAgentAnisimov.v12.suo
+#	new file:   Source/SleeperAgentAnisimov/Item.cpp
+#	new file:   Source/SleeperAgentAnisimov/Item.h
+#
+
