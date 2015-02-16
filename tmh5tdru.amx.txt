@@ -1,0 +1,38 @@
+﻿
+# Please enter the commit message for your changes. Lines starting
+# with '#' will be ignored, and an empty message aborts the commit.
+# On branch master
+# Your branch is behind 'origin/master' by 5 commits, and can be fast-forwarded.
+#   (use "git pull" to update your local branch)
+#
+# Changes to be committed:
+#	new file:   Content/Animations/Idle.uasset
+#	new file:   Content/Animations/Jump_End.uasset
+#	new file:   Content/Animations/Jump_Loop.uasset
+#	new file:   Content/Animations/Jump_Start.uasset
+#	new file:   Content/Animations/Run.uasset
+#	new file:   Content/Animations/Walk.uasset
+#	new file:   Content/Character/HeroTPP.uasset
+#	new file:   Content/Character/HeroTPP_AnimBlueprint.uasset
+#	new file:   Content/Character/HeroTPP_Skeleton.uasset
+#	new file:   Content/Character/IdleRun_TPP.uasset
+#	new file:   Content/Items/NewBlueprint.uasset
+#	new file:   Content/Models/Player/HeroTPP.uasset
+#	new file:   Content/Models/Player/HeroTPP_Skeleton.uasset
+#	new file:   Content/Models/Player/Idle.uasset
+#	new file:   Content/Models/Player/Jump_Loop.uasset
+#	new file:   Source/SleeperAgentAnisimov/Item.cpp
+#	new file:   Source/SleeperAgentAnisimov/Item.h
+#
+# Changes not staged for commit:
+#	modified:   Config/DefaultInput.ini
+#	modified:   Content/StarterContent/Minimal_Default.umap
+#	modified:   SleeperAgentAnisimov.sdf
+#	modified:   SleeperAgentAnisimov.sln
+#	modified:   SleeperAgentAnisimov.v12.suo
+#
+# Untracked files:
+#	Content/Blueprints/MyCharacter.uasset
+#	ykgkbock.shs.txt
+#
+
