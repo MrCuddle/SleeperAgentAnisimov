@@ -21,10 +21,17 @@ class SLEEPERAGENTANISIMOV_API ALevelGenerationScriptActor : public ALevelScript
 
 	GENERATED_BODY()
 	int layout[9][9];
+	int nRooms;
+	std::queue<std::pair<int, int>> rooms;
 
 public:
 	/** Generate a level*/
 	UFUNCTION(BlueprintCallable, Category = "Level Generation")
 	void GenerateLevel();
+
+private:
+	void ExploreLevel();
+	int GetAdjacentRooms(int i, int j);
+	int GetDistanceFromStart(int i, int j);
 		
 };
