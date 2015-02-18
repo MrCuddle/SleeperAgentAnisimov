@@ -3,22 +3,29 @@
 #pragma once
 
 #include "GameFramework/Actor.h"
+//#include "Components/ArrowComponent.h"
 #include "Item.generated.h"
 
 /**
  * 
  */
-UCLASS()
+UCLASS(meta = (CanEverTick = "true"))
 class SLEEPERAGENTANISIMOV_API AItem : public AActor
 {
 	GENERATED_BODY()
 public:
 	
-	UPROPERTY(VisibleAnywhere, Category = "Mesh Components")
+	UPROPERTY(VisibleAnywhere, Category = "Item Components")
 	class UStaticMeshComponent* StaticMesh1;
 	
-	UPROPERTY(VisibleAnywhere, Category = "Sphere Component")
-	class USphereComponent* Sphere1;
+	UPROPERTY(VisibleAnywhere, Category = "Item Component")
+	class UCapsuleComponent* Capsule1;
+
+	UPROPERTY(VisibleAnywhere, Category = "Item Component")
+	class USceneComponent* myRootComponent;
+
+	UPROPERTY(VisibleAnywhere, Category = "Item Component")
+	class UArrowComponent* Arrow1;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Item Properties")
 	bool Weapon;

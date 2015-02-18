@@ -9,13 +9,26 @@ AItem::AItem(const FObjectInitializer& ObjectInitializer)
 {
 	StaticMesh1 = ObjectInitializer.CreateDefaultSubobject<UStaticMeshComponent >(this, TEXT("ItemMesh"));
 	StaticMesh1->bVisible = true;
-	RootComponent = StaticMesh1;
 
-	Sphere1 = ObjectInitializer.CreateDefaultSubobject<USphereComponent>(this, TEXT("Sphere1"));
-	Sphere1->InitSphereRadius(50.0f);
-	Sphere1->AttachParent = RootComponent;
+	Capsule1 = ObjectInitializer.CreateDefaultSubobject<UCapsuleComponent>(this, TEXT("Capsule1"));
+	Capsule1->InitCapsuleSize(50, 100);
+	FRotator capsuleRotator = FRotator(90.0f, 0.0f, 0.0f);
+	Capsule1->SetWorldRotation(capsuleRotator);
+	
+	myRootComponent = ObjectInitializer.CreateDefaultSubobject<USceneComponent>(this, TEXT("Root"));
 
-	Sphere1->OnComponentBeginOverlap.AddDynamic(this, &AItem::OnOverlapBegin);        // set up a notification for when this component overlaps something
+	Arrow1 = ObjectInitializer.CreateDefaultSubobject<UArrowComponent>(this, TEXT("Arrow1"));
+
+	SetRootComponent(myRootComponent);
+
+	StaticMesh1->AttachParent = RootComponent;
+	Capsule1->AttachParent = RootComponent;
+	/*RootComponent = Capsule1;
+
+	
+	StaticMesh1->AttachParent = RootComponent;*/
+
+	Capsule1->OnComponentBeginOverlap.AddDynamic(this, &AItem::OnOverlapBegin);        // set up a notification for when this component overlaps something
 
 	
 }
@@ -24,15 +37,8 @@ void AItem::OnOverlapBegin(class AActor* OtherActor, class UPrimitiveComponent* 
 {
 	if (OtherActor && (OtherActor != this) && OtherComp)
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, "Picked up: " + Name);
-
-		ACharacter* myCharacter;
-
-		for (TActorIterator<AActor> ActorItr(GetWorld()); ActorItr; ++ActorItr)
-		{
-			myCharacter = Cast<ACharacter>(*ActorItr);
-		}
-
+		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, Name + " Collided with: " + OtherActor->GetName());
+		
 	}
 }
 
