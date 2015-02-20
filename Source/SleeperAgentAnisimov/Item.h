@@ -3,13 +3,12 @@
 #pragma once
 
 #include "GameFramework/Actor.h"
-//#include "Components/ArrowComponent.h"
 #include "Item.generated.h"
 
 /**
  * 
  */
-UCLASS(meta = (CanEverTick = "true"))
+UCLASS()
 class SLEEPERAGENTANISIMOV_API AItem : public AActor
 {
 	GENERATED_BODY()
@@ -36,9 +35,13 @@ public:
 	UFUNCTION()
 	void OnOverlapBegin(class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 
+	UFUNCTION(BlueprintCallable, Category="ItemFunctions")
+	void UseItem();
+
 	AItem(const FObjectInitializer& ObjectInitializer);
-	
-	
+
+private:
+	TSubclassOf<class UActorComponent> ItemComponentBlueprint;
 	
 	
 };

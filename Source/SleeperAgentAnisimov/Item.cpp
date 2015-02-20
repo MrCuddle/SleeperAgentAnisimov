@@ -7,6 +7,9 @@
 AItem::AItem(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
 {
+	static ConstructorHelpers::FObjectFinder<UBlueprint> ItemBlueprint(TEXT("/Game/Items/ItemComponents/ItemComponent"));
+	ItemComponentBlueprint = (UClass*)ItemBlueprint.Object->GeneratedClass;
+
 	StaticMesh1 = ObjectInitializer.CreateDefaultSubobject<UStaticMeshComponent >(this, TEXT("ItemMesh"));
 	StaticMesh1->bVisible = true;
 
@@ -23,13 +26,10 @@ AItem::AItem(const FObjectInitializer& ObjectInitializer)
 
 	StaticMesh1->AttachParent = RootComponent;
 	Capsule1->AttachParent = RootComponent;
-	/*RootComponent = Capsule1;
-
-	
-	StaticMesh1->AttachParent = RootComponent;*/
 
 	Capsule1->OnComponentBeginOverlap.AddDynamic(this, &AItem::OnOverlapBegin);        // set up a notification for when this component overlaps something
 
+	
 	
 }
 
@@ -40,5 +40,23 @@ void AItem::OnOverlapBegin(class AActor* OtherActor, class UPrimitiveComponent* 
 		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, Name + " Collided with: " + OtherActor->GetName());
 		
 	}
+}
+
+void AItem::UseItem()
+{
+	TArray<UActorComponent*> ItemComponents = GetComponents();
+
+	for (UActorComponent* c : ItemComponents)
+	{
+		if (c && c->IsA(ItemComponentBlueprint))
+		{
+			//GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, Name + "ASDASD" + c->GetName());
+			
+			UFunction* func = c->FindFunction(FName("OnUse"));
+			c->ProcessEvent(func, nullptr);
+		}
+	}
+	
+
 }
 
