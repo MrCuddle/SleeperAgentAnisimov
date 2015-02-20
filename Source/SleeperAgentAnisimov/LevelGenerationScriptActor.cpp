@@ -8,37 +8,37 @@
 
 ALevelGenerationScriptActor::ALevelGenerationScriptActor(const class FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer){
 	srand(time(NULL));
-	//static ConstructorHelpers::FObjectFinder<UBlueprint> ItemBlueprint(TEXT("/Game/Blueprints/RoomPrototype1"));
-	//if (ItemBlueprint.Object){
-	//	RoomBlueprint = (UClass*)ItemBlueprint.Object->GeneratedClass;
-	//	northRooms.push_back(RoomBlueprint);
-	//	eastRooms.push_back(RoomBlueprint);
-	//	southRooms.push_back(RoomBlueprint);
-	//	westRooms.push_back(RoomBlueprint);
-	//}
+	static ConstructorHelpers::FObjectFinder<UBlueprint> ItemBlueprint(TEXT("/Game/Blueprints/RoomPrototype1"));
+	if (ItemBlueprint.Object){
+		RoomBlueprint = (UClass*)ItemBlueprint.Object->GeneratedClass;
+		northRooms.push_back(RoomBlueprint);
+		eastRooms.push_back(RoomBlueprint);
+		southRooms.push_back(RoomBlueprint);
+		westRooms.push_back(RoomBlueprint);
+	}
 
-	//static ConstructorHelpers::FObjectFinder<UBlueprint> ItemBlueprint2(TEXT("/Game/Blueprints/RoomPrototype2"));
-	//if (ItemBlueprint2.Object){
-	//	RoomBlueprint = (UClass*)ItemBlueprint2.Object->GeneratedClass;
-	//	northRooms.push_back(RoomBlueprint);
-	//	eastRooms.push_back(RoomBlueprint);
-	//	southRooms.push_back(RoomBlueprint);
-	//	westRooms.push_back(RoomBlueprint);
-	//}
+	static ConstructorHelpers::FObjectFinder<UBlueprint> ItemBlueprint2(TEXT("/Game/Blueprints/RoomPrototype2"));
+	if (ItemBlueprint2.Object){
+		RoomBlueprint = (UClass*)ItemBlueprint2.Object->GeneratedClass;
+		northRooms.push_back(RoomBlueprint);
+		eastRooms.push_back(RoomBlueprint);
+		southRooms.push_back(RoomBlueprint);
+		westRooms.push_back(RoomBlueprint);
+	}
 
-	//static ConstructorHelpers::FObjectFinder<UBlueprint> ItemBlueprint3(TEXT("/Game/Blueprints/RoomPrototype3"));
-	//if (ItemBlueprint3.Object){
-	//	RoomBlueprint = (UClass*)ItemBlueprint3.Object->GeneratedClass;
-	//	northRooms.push_back(RoomBlueprint);
-	//	westRooms.push_back(RoomBlueprint);
-	//}
+	static ConstructorHelpers::FObjectFinder<UBlueprint> ItemBlueprint3(TEXT("/Game/Blueprints/RoomPrototype3"));
+	if (ItemBlueprint3.Object){
+		RoomBlueprint = (UClass*)ItemBlueprint3.Object->GeneratedClass;
+		northRooms.push_back(RoomBlueprint);
+		westRooms.push_back(RoomBlueprint);
+	}
 
-	//static ConstructorHelpers::FObjectFinder<UBlueprint> ItemBlueprint4(TEXT("/Game/Blueprints/RoomPrototype4"));
-	//if (ItemBlueprint4.Object){
-	//	RoomBlueprint = (UClass*)ItemBlueprint4.Object->GeneratedClass;
-	//	northRooms.push_back(RoomBlueprint);
-	//	southRooms.push_back(RoomBlueprint);
-	//}
+	static ConstructorHelpers::FObjectFinder<UBlueprint> ItemBlueprint4(TEXT("/Game/Blueprints/RoomPrototype4"));
+	if (ItemBlueprint4.Object){
+		RoomBlueprint = (UClass*)ItemBlueprint4.Object->GeneratedClass;
+		northRooms.push_back(RoomBlueprint);
+		southRooms.push_back(RoomBlueprint);
+	}
 }
 
 void ALevelGenerationScriptActor::GenerateLevel(){
