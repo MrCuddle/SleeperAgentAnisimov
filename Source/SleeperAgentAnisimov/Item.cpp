@@ -37,7 +37,7 @@ void AItem::OnOverlapBegin(class AActor* OtherActor, class UPrimitiveComponent* 
 {
 	if (OtherActor && (OtherActor != this) && OtherComp)
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, Name + " Collided with: " + OtherActor->GetName());
+		//GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, Name + " Collided with: " + OtherActor->GetName());
 		
 	}
 }
