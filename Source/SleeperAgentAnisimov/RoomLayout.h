@@ -16,5 +16,7 @@ public:
 	bool southDoor;
 	bool westDoor;
 	TArray<FVector2D> floorLocations;
+	TArray<FVector2D> hWallLocations;
+	TArray<FVector2D> vWallLocations;
 
 };

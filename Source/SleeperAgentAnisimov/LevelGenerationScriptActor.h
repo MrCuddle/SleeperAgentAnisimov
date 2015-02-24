@@ -39,6 +39,8 @@ private:
 	std::vector<RoomLayout*> southRooms;
 	std::vector<RoomLayout*> westRooms;
 
+	void LoadRoomLayouts();
+	void LoadRoomLayout(FString path);
 	void ExploreLevel();
 	int GetAdjacentRooms(int i, int j);
 	int GetDistanceFromStart(int i, int j);
