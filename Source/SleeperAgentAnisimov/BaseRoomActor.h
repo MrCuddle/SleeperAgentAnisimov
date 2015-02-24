@@ -22,9 +22,12 @@ public:
 	bool SouthDoor;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = DoorLocations)
 	bool WestDoor;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = FloorLocations)
+	TArray<FVector2D> FloorLocations;
 	
 	UFUNCTION(BlueprintImplementableEvent, Category = "Level Generation")
-		virtual void SetDoors();
+	virtual void GenerateRoom();
 	
 	
 };

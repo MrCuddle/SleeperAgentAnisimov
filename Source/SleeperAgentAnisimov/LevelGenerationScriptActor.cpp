@@ -3,42 +3,32 @@
 #include "SleeperAgentAnisimov.h"
 #include "LevelGenerationScriptActor.h"
 #include "BaseRoomActor.h"
+#include "RoomLayout.h"
 #include <cstdlib>
 #include <iterator>
 
 ALevelGenerationScriptActor::ALevelGenerationScriptActor(const class FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer){
 	srand(time(NULL));
-	static ConstructorHelpers::FObjectFinder<UBlueprint> ItemBlueprint(TEXT("/Game/Blueprints/RoomPrototype1"));
-	if (ItemBlueprint.Object){
-		RoomBlueprint = (UClass*)ItemBlueprint.Object->GeneratedClass;
-		northRooms.push_back(RoomBlueprint);
-		eastRooms.push_back(RoomBlueprint);
-		southRooms.push_back(RoomBlueprint);
-		westRooms.push_back(RoomBlueprint);
+	static ConstructorHelpers::FObjectFinder<UBlueprint> BlueprintFinder(TEXT("/Game/Blueprints/RoomLoader"));
+	if (BlueprintFinder.Object){
+		roomLoaderBlueprint = (UClass*)BlueprintFinder.Object->GeneratedClass;
 	}
 
-	static ConstructorHelpers::FObjectFinder<UBlueprint> ItemBlueprint2(TEXT("/Game/Blueprints/RoomPrototype2"));
-	if (ItemBlueprint2.Object){
-		RoomBlueprint = (UClass*)ItemBlueprint2.Object->GeneratedClass;
-		northRooms.push_back(RoomBlueprint);
-		eastRooms.push_back(RoomBlueprint);
-		southRooms.push_back(RoomBlueprint);
-		westRooms.push_back(RoomBlueprint);
-	}
 
-	static ConstructorHelpers::FObjectFinder<UBlueprint> ItemBlueprint3(TEXT("/Game/Blueprints/RoomPrototype3"));
-	if (ItemBlueprint3.Object){
-		RoomBlueprint = (UClass*)ItemBlueprint3.Object->GeneratedClass;
-		northRooms.push_back(RoomBlueprint);
-		westRooms.push_back(RoomBlueprint);
-	}
+	//std::ifstream ifstream("Content/RoomLayouts/northwestcornercorridor_nowalls.room");
 
-	static ConstructorHelpers::FObjectFinder<UBlueprint> ItemBlueprint4(TEXT("/Game/Blueprints/RoomPrototype4"));
-	if (ItemBlueprint4.Object){
-		RoomBlueprint = (UClass*)ItemBlueprint4.Object->GeneratedClass;
-		northRooms.push_back(RoomBlueprint);
-		southRooms.push_back(RoomBlueprint);
-	}
+	TArray<FString> strings;
+	FString f = FPaths::GameDir();
+	f += "Content/RoomLayouts/northwestcornercorridor_nowalls.room";
+	FFileHelper::LoadANSITextFileToStrings(*f, NULL, strings);
+
+	RoomLayout *roomLayout = new RoomLayout();
+	if (strings[0][0] == '1') { roomLayout->northDoor = true; northRooms.push_back(roomLayout); }
+	if (strings[0][1] == '1') { roomLayout->eastDoor = true; eastRooms.push_back(roomLayout); }
+	if (strings[0][2] == '1') { roomLayout->southDoor = true; southRooms.push_back(roomLayout); }
+	if (strings[0][3] == '1') { roomLayout->westDoor = true; westRooms.push_back(roomLayout); }
+
+
 }
 
 void ALevelGenerationScriptActor::GenerateLevel(){
@@ -59,7 +49,7 @@ void ALevelGenerationScriptActor::GenerateLevel(){
 			{
 				if (layout[i][j] == 1)
 				{
-					std::vector<TSubclassOf<class AActor>> outputSet;
+					std::vector<RoomLayout*> outputSet;
 					if (j < 8 && layout[i][j + 1] == 1)
 					{
 						if (outputSet.empty())
@@ -75,7 +65,7 @@ void ALevelGenerationScriptActor::GenerateLevel(){
 						}
 						else
 						{
-							std::vector<TSubclassOf<class AActor>> newOutput;
+							std::vector<RoomLayout*> newOutput;
 							std::set_intersection(outputSet.begin(), outputSet.end(), eastRooms.begin(), eastRooms.end(), std::back_inserter(newOutput));
 							outputSet = newOutput;
 						}
@@ -88,7 +78,7 @@ void ALevelGenerationScriptActor::GenerateLevel(){
 						}
 						else
 						{
-							std::vector<TSubclassOf<class AActor>> newOutput;
+							std::vector<RoomLayout*> newOutput;
 							std::set_intersection(outputSet.begin(), outputSet.end(), westRooms.begin(), westRooms.end(), std::back_inserter(newOutput));
 							outputSet = newOutput;
 						}
@@ -101,24 +91,18 @@ void ALevelGenerationScriptActor::GenerateLevel(){
 						}
 						else
 						{
-							std::vector<TSubclassOf<class AActor>> newOutput;
+							std::vector<RoomLayout*> newOutput;
 							std::set_intersection(outputSet.begin(), outputSet.end(), northRooms.begin(), northRooms.end(), std::back_inserter(newOutput));
 							outputSet = newOutput;
 						}
 					}
 
-					ABaseRoomActor* room = nullptr;
-					int index = rand() % outputSet.size();
-					room = (ABaseRoomActor*)world->SpawnActor<AActor>(outputSet[index], FVector(1200 * (i - 4), 1200 * (j - 4), 0), FRotator(0, 0, 0));
 
-					/*switch (rand() % outputSet.size()){*/
-					//case 0:
-					//	room = (ABaseRoomActor*)world->SpawnActor<AActor>(RoomBlueprint, FVector(1200 * (i - 4), 1200 * (j - 4), 0), FRotator(0, 0, 0));
-					//	break;
-					//case 1:
-					//	room = (ABaseRoomActor*)world->SpawnActor<AActor>(RoomBlueprint2, FVector(1200 * (i - 4), 1200 * (j - 4), 0), FRotator(0, 0, 0));
-					//	break;
-					//}
+					//int index = rand() % outputSet.size();
+					//room = (ABaseRoomActor*)world->SpawnActor<AActor>(outputSet[index], FVector(1200 * (i - 4), 1200 * (j - 4), 0), FRotator(0, 0, 0));
+
+					ABaseRoomActor* room = (ABaseRoomActor*)world->SpawnActor<AActor>(roomLoaderBlueprint, FVector(1200 * (i - 4), 1200 * (j - 4), 0), FRotator(0, 0, 0));
+
 					if (room){
 						if (j < 8 && layout[i][j + 1] == 1)
 							room->SouthDoor = true;
@@ -128,7 +112,7 @@ void ALevelGenerationScriptActor::GenerateLevel(){
 							room->WestDoor = true;
 						if (j > 0 && layout[i][j - 1] == 1)
 							room->NorthDoor = true;
-						room->SetDoors();
+						room->GenerateRoom();
 					}
 				}
 			}

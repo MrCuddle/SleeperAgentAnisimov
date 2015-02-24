@@ -8,7 +8,9 @@
 #include <queue>
 #include <utility>
 #include <vector>
+#include "RoomLayout.h"
 #include "LevelGenerationScriptActor.generated.h"
+
 
 /**
  * 
@@ -18,8 +20,7 @@ class SLEEPERAGENTANISIMOV_API ALevelGenerationScriptActor : public ALevelScript
 {
 
 
-	TSubclassOf<class AActor> RoomBlueprint;
-	TSubclassOf<class AActor> RoomBlueprint2;
+	TSubclassOf<class AActor> roomLoaderBlueprint;
 	ALevelGenerationScriptActor(const class FObjectInitializer& ObjectInitializer);
 
 	GENERATED_BODY()
@@ -33,10 +34,10 @@ public:
 	void GenerateLevel();
 
 private:
-	std::vector<TSubclassOf<class AActor>> northRooms;
-	std::vector<TSubclassOf<class AActor>> eastRooms;
-	std::vector<TSubclassOf<class AActor>> southRooms;
-	std::vector<TSubclassOf<class AActor>> westRooms;
+	std::vector<RoomLayout*> northRooms;
+	std::vector<RoomLayout*> eastRooms;
+	std::vector<RoomLayout*> southRooms;
+	std::vector<RoomLayout*> westRooms;
 
 	void ExploreLevel();
 	int GetAdjacentRooms(int i, int j);
