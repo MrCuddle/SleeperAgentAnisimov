@@ -113,6 +113,41 @@ void ALevelGenerationScriptActor::LoadRoomLayout(FString path){
 	}
 
 	roomLayout->vWallLocations = verticalWalls;
+
+	//Items:
+	TArray<FVector2D> items;
+
+	TArray<FString> itemStrings;
+	strings[4].ParseIntoArrayWS(&itemStrings);
+
+	for (int i = 0; i < itemStrings.Num(); i++){
+		FString sX, sY;
+		itemStrings[i].Split(FString(","), &sX, &sY);
+		int x = 0, y = 0;
+		FDefaultValueHelper::ParseInt(sX, x);
+		FDefaultValueHelper::ParseInt(sY, y);
+		items.Add(FVector2D(x, y));
+	}
+
+	roomLayout->itemLocations = items;
+
+	//Guards:
+	TArray<FVector2D> guards;
+
+	TArray<FString> guardStrings;
+	strings[5].ParseIntoArrayWS(&guardStrings);
+
+	for (int i = 0; i < guardStrings.Num(); i++){
+		FString sX, sY;
+		guardStrings[i].Split(FString(","), &sX, &sY);
+		int x = 0, y = 0;
+		FDefaultValueHelper::ParseInt(sX, x);
+		FDefaultValueHelper::ParseInt(sY, y);
+		guards.Add(FVector2D(x, y));
+	}
+
+	roomLayout->guardLocations = guards;
+
 	//Read the locations of everything else
 	//TODO
 }
@@ -210,6 +245,8 @@ void ALevelGenerationScriptActor::GenerateLevel(){
 						room->FloorLocations = roomLayout->floorLocations;
 						room->HWallLocations = roomLayout->hWallLocations;
 						room->VWallLocations = roomLayout->vWallLocations;
+						room->ItemLocations = roomLayout->itemLocations;
+						room->GuardLocations = roomLayout->guardLocations;
 
 						room->GenerateRoom();
 					}

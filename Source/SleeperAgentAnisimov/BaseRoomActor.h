@@ -37,6 +37,10 @@ public:
 	TArray<FVector2D> HWallLocations;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Level Generation")
 	TArray<FVector2D> VWallLocations;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Level Generation")
+	TArray<FVector2D> ItemLocations;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Level Generation")
+	TArray<FVector2D> GuardLocations;
 	
 	UFUNCTION(BlueprintImplementableEvent, Category = "Level Generation")
 	virtual void GenerateRoom();
