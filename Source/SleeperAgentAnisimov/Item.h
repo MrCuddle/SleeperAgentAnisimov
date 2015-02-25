@@ -27,7 +27,7 @@ public:
 	class UArrowComponent* Arrow1;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Item Properties")
-	bool Weapon;
+	bool Spawnable;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Item Properties")
 	FString Name;
