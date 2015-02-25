@@ -50,7 +50,7 @@ void AItem::UseItem()
 	{
 		if (c && c->IsA(ItemComponentBlueprint))
 		{
-			GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, Name + " used component: " + c->GetName());
+			//GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, Name + " used component: " + c->GetName());
 			
 			UFunction* func = c->FindFunction(FName("OnUse"));
 			c->ProcessEvent(func, nullptr);

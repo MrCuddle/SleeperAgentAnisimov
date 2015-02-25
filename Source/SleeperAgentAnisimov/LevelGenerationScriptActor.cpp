@@ -221,6 +221,21 @@ void ALevelGenerationScriptActor::GenerateLevel(){
 
 					RoomLayout* roomLayout = outputSet[rand() % outputSet.size()];
 
+					if (i == 4 && j == 4){
+						if (roomLayout->northDoor){
+							PlayerSpawn = FVector2D(600, 200);
+						}
+						else if (roomLayout->eastDoor){
+							PlayerSpawn = FVector2D(1000, 600);
+						}
+						else if (roomLayout->southDoor){
+							PlayerSpawn = FVector2D(600, 1000);
+						}
+						else {
+							PlayerSpawn = FVector2D(200, 600);
+						}
+					}
+
 					//int index = rand() % outputSet.size();
 					//room = (ABaseRoomActor*)world->SpawnActor<AActor>(outputSet[index], FVector(1200 * (i - 4), 1200 * (j - 4), 0), FRotator(0, 0, 0));
 
