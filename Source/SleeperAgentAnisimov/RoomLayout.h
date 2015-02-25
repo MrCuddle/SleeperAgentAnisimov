@@ -18,5 +18,7 @@ public:
 	TArray<FVector2D> floorLocations;
 	TArray<FVector2D> hWallLocations;
 	TArray<FVector2D> vWallLocations;
+	TArray<FVector2D> itemLocations;
+	TArray<FVector2D> guardLocations;
 
 };
