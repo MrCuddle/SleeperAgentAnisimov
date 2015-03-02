@@ -5,6 +5,18 @@
 #include "GameFramework/Actor.h"
 #include "PatrolNode.generated.h"
 
+USTRUCT(BlueprintType)
+struct FPatrolNodeEvent
+{
+    GENERATED_USTRUCT_BODY()
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Patrol")
+    float delay;
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Patrol")
+    float rotation;
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Patrol")
+    bool reversePattern;
+};
+
 UCLASS()
 class SLEEPERAGENTANISIMOV_API APatrolNode : public AActor
 {
@@ -25,4 +37,7 @@ public:
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Patrol")
     APatrolNode* prevNode;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Patrol")
+    TArray<FPatrolNodeEvent> events;
 };
