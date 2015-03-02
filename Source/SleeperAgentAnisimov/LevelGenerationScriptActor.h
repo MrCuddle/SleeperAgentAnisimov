@@ -12,19 +12,31 @@
 #include "LevelGenerationScriptActor.generated.h"
 
 
+struct SearchData{
+	bool visited;
+	std::pair<int, int> parent;
+	SearchData(){
+		visited = false;
+		parent = std::pair<int, int>(-1, -1);
+	}
+	
+};
+
 /**
  * 
  */
 UCLASS()
 class SLEEPERAGENTANISIMOV_API ALevelGenerationScriptActor : public ALevelScriptActor
 {
-
+	static const int levelWidth = 10;
+	static const int levelHeight = 10;
 
 	TSubclassOf<class AActor> roomLoaderBlueprint;
 	ALevelGenerationScriptActor(const class FObjectInitializer& ObjectInitializer);
 
 	GENERATED_BODY()
-	int layout[9][9];
+	int layout[levelWidth][levelHeight];
+	SearchData layoutSearchData[levelWidth][levelHeight];
 	int nRooms;
 	std::queue<std::pair<int, int>> rooms;
 
@@ -44,6 +56,8 @@ private:
 	void LoadRoomLayouts();
 	void LoadRoomLayout(FString path);
 	void ExploreLevel();
+	void PlanLayout();
+	void PlanRegion(int startX, int startY, int endX, int endY, bool startRegion, int con1X, int con1Y, int con2X, int con2Y);
 	int GetAdjacentRooms(int i, int j);
 	int GetDistanceFromStart(int i, int j);
 		

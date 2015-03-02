@@ -39,6 +39,7 @@ void ALevelGenerationScriptActor::LoadRoomLayouts(){
 	for (int i = 0; i < v->files.size(); i++){
 		LoadRoomLayout(v->files[i]);
 	}
+	delete v;
 
 	//Sets must be sorted for set_intersection to work properly!
 	sort(northRooms.begin(), northRooms.end());
@@ -156,29 +157,34 @@ void ALevelGenerationScriptActor::GenerateLevel(){
 	nRooms = 16;
 	UWorld* const world = GetWorld();
 	if (world){
-		while (nRooms > 0){
-			rooms.push(std::pair<int, int>(4, 4));
-			while (!rooms.empty()){
-				ExploreLevel();
-			}
-		}
+
+		PlanLayout();
+
+
+		//Old layout generation
+		//while (nRooms > 0){
+		//	rooms.push(std::pair<int, int>(4, 4));
+		//	while (!rooms.empty()){
+		//		ExploreLevel();
+		//	}
+		//}
 
 		//Spawn the rooms
-		for (int i = 0; i < 9; i++)
+		for (int i = 0; i < levelWidth; i++)
 		{
-			for (int j = 0; j < 9; j++)
+			for (int j = 0; j < levelHeight; j++)
 			{
-				if (layout[i][j] == 1)
+				if (layout[i][j] > 0)
 				{
 					std::vector<RoomLayout*> outputSet;
-					if (j < 8 && layout[i][j + 1] == 1)
+					if (j < 8 && layout[i][j + 1] > 0)
 					{
 						if (outputSet.empty())
 						{
 							outputSet = southRooms;
 						}
 					}
-					if (i < 8 && layout[i + 1][j] == 1)
+					if (i < 8 && layout[i + 1][j] > 0)
 					{
 						if (outputSet.empty())
 						{
@@ -191,7 +197,7 @@ void ALevelGenerationScriptActor::GenerateLevel(){
 							outputSet = newOutput;
 						}
 					}
-					if (i > 0 && layout[i - 1][j] == 1)
+					if (i > 0 && layout[i - 1][j] > 0)
 					{
 						if (outputSet.empty())
 						{
@@ -204,7 +210,7 @@ void ALevelGenerationScriptActor::GenerateLevel(){
 							outputSet = newOutput;
 						}
 					}
-					if (j > 0 && layout[i][j - 1] == 1)
+					if (j > 0 && layout[i][j - 1] > 0)
 					{
 						if (outputSet.empty())
 						{
@@ -243,13 +249,13 @@ void ALevelGenerationScriptActor::GenerateLevel(){
 					
 
 					if (room){
-						if (j < 8 && layout[i][j + 1] == 1)
+						if (j < 8 && layout[i][j + 1] > 0)
 							room->SouthDoor = true;
-						if (i < 8 && layout[i + 1][j] == 1)
+						if (i < 8 && layout[i + 1][j] > 0)
 							room->EastDoor = true;
-						if (i > 0 && layout[i - 1][j] == 1)
+						if (i > 0 && layout[i - 1][j] > 0)
 							room->WestDoor = true;
-						if (j > 0 && layout[i][j - 1] == 1)
+						if (j > 0 && layout[i][j - 1] > 0)
 							room->NorthDoor = true;
 
 						room->NorthDoorPossible = roomLayout->northDoor;
@@ -270,6 +276,220 @@ void ALevelGenerationScriptActor::GenerateLevel(){
 		}
 	}
 }
+
+void ALevelGenerationScriptActor::PlanLayout(){
+	//1 == rooom
+	//-1 == block
+	//2 == start
+	//3 == treasure room
+	//4 == objective room
+
+	//New layout generation
+	//1. Split vertically (between 4 and levelHeight - 4):
+	int vSplit = 4 +rand() % (levelHeight - 8);
+	//choose start in top or bottom:
+	bool startTop = false;
+	if (rand() % 2 == 0){
+		startTop = true;
+	}
+
+	//2. 50% chance to split horizontally (between 4 and levelWidth - 4);
+	int hSplitTop = 0;
+	int hSplitBottom = 0;
+	bool splitTop = false;
+	bool splitBottom = false;
+	//top...
+	if (true || rand() % 2 == 0){
+		splitTop = true;
+		hSplitTop = 4+rand() % (levelWidth - 8);
+	}
+	//bottom...
+	if (true || rand() % 2 == 0){
+		splitBottom = true;
+		hSplitBottom = 4+rand() % (levelHeight - 8);
+	}
+
+	//3. Place connecting rooms
+	int topConV = 0;
+	int botConV = 0;
+	int midConH = 0;
+
+	//Connect the top two areas
+	if (splitTop){
+		topConV = rand() % (vSplit - 1);
+		layout[hSplitTop - 1][topConV] = 1;
+		layout[hSplitTop][topConV] = 1;
+	}
+	//Connect the bottom two areas 
+	if (splitBottom){
+		botConV = vSplit + 1 + rand() % (levelHeight - vSplit - 1);
+		layout[hSplitBottom - 1][botConV] = 1;
+		layout[hSplitBottom][botConV] = 1;
+	}
+	//Connect the bottom and the top areas
+	if (startTop){
+		midConH = std::max(hSplitTop, hSplitBottom) + 1 + rand() % (levelWidth - std::max(hSplitTop, hSplitBottom) - 1);
+		layout[midConH][vSplit - 1] = 1;
+		layout[midConH][vSplit] = 1;
+	}
+	else {
+		midConH = rand() % (std::min(hSplitTop == 0 ? levelWidth : hSplitTop, hSplitBottom == 0 ? levelWidth : hSplitBottom) - 1);
+		layout[midConH][vSplit - 1] = 1;
+		layout[midConH][vSplit] = 1;
+	}
+	//Block the border tiles
+	for (int i = 0; i < levelWidth; i++){
+		if (layout[i][vSplit - 1] != 1) layout[i][vSplit - 1] = -1;
+		if (layout[i][vSplit] != 1) layout[i][vSplit] = -1;
+	}
+	if (splitTop){
+		for (int i = 0; i < vSplit; i++){
+			if (layout[hSplitTop - 1][i] != 1)layout[hSplitTop - 1][i] = -1;
+			if (layout[hSplitTop][i] != 1)layout[hSplitTop][i] = -1;
+		}
+	}
+	if (splitBottom){
+		for (int i = vSplit; i < levelHeight; i++){
+			if (layout[hSplitBottom - 1][i] != 1)layout[hSplitBottom - 1][i] = -1;
+			if (layout[hSplitBottom][i] != 1)layout[hSplitBottom][i] = -1;
+		}
+	}
+
+	if (splitTop){
+		PlanRegion(0, 0, hSplitTop - 2, vSplit - 2, startTop ? true : false, hSplitTop - 2, topConV, startTop ? -1 : midConH, startTop ? -1 : vSplit - 2);
+		PlanRegion(hSplitTop + 1, 0, levelWidth - 1, vSplit - 2, false, hSplitTop + 1, topConV, startTop ? midConH : -1, startTop ? vSplit - 2 : -1);
+	}
+	else {
+		PlanRegion(0, 0, levelWidth - 1, vSplit - 2, startTop ? true : false, midConH, vSplit-2, -1, -1);
+	}
+
+	if (splitBottom){
+		PlanRegion(0, vSplit + 1, hSplitBottom - 2, levelHeight - 1, false, hSplitBottom - 2, botConV, startTop ? -1 : midConH, startTop ? -1 : vSplit + 1);
+		PlanRegion(hSplitBottom + 1, vSplit + 1, levelWidth - 1, levelHeight - 1, startTop ? false : true, hSplitBottom + 1, botConV, startTop ? midConH : -1, startTop ? vSplit + 1 : -1);
+	}
+	else {
+		PlanRegion(0, vSplit + 1, levelWidth - 1, levelHeight - 1, startTop ? false : true, midConH, vSplit + 1, -1, -1);
+	}
+
+
+}
+
+void ALevelGenerationScriptActor::PlanRegion(int startX, int startY, int endX, int endY, bool startRegion, int con1X, int con1Y, int con2X = -1, int con2Y = -1){
+
+	int startPosX = 0;
+	int startPosY = 0;
+	int treasureRoomX = 0;
+	int treasureRoomY = 0;
+	int objRoomX = 0;
+	int objRoomY = 0;
+
+	layout[con1X][con1Y] = 1;
+
+	if (con2X != -1){
+		layout[con2X][con2Y] = 1;
+	}
+
+	//Pick start position if needed
+	if (startRegion){
+		while (true){
+			startPosX = startX + rand() % (endX - startX);
+			startPosY = startY + rand() % (endY - startY);
+			if (layout[startPosX][startPosY] == 0){
+				layout[startPosX][startPosY] = 2;
+				break;
+			}
+		}
+	}
+
+	//Pick treasure room position
+	while (true){
+		treasureRoomX = startX + rand() % (endX - startX);
+		treasureRoomY = startY + rand() % (endY - startY);
+		if (layout[treasureRoomX][treasureRoomY] == 0){
+			layout[treasureRoomX][treasureRoomY] = 3;
+			break;
+		}
+	}
+
+	//Pick objective room position
+	while (true){
+		objRoomX = startX + rand() % (endX - startX);
+		objRoomY = startY + rand() % (endY - startY);
+		if (layout[objRoomX][objRoomY] == 0){
+			layout[objRoomX][objRoomY] = 4;
+			break;
+		}
+	}
+
+	//Perform a breadth first traversal of the region starting at one of the "doors" ---- ORRRRR the objective room??
+	std::queue<std::pair<int, int>> q;
+	q.push(std::pair<int, int>(objRoomX, objRoomY));
+	layoutSearchData[q.front().first][q.front().second].visited = true;
+	while (!q.empty()){
+		std::pair<int, int> current = q.front();
+		q.pop();
+		if (current.first - 1 >= startX && layoutSearchData[current.first - 1][current.second].visited != true && layout[current.first - 1][current.second] != -1){
+			q.push(std::pair<int, int>(current.first - 1, current.second));
+			layoutSearchData[current.first - 1][current.second].visited = true;
+			layoutSearchData[current.first - 1][current.second].parent = current;
+		}
+		if (current.first + 1 <= endX && layoutSearchData[current.first + 1][current.second].visited != true && layout[current.first + 1][current.second] != -1){
+			q.push(std::pair<int, int>(current.first + 1, current.second));
+			layoutSearchData[current.first + 1][current.second].visited = true;
+			layoutSearchData[current.first + 1][current.second].parent = current;
+		}
+		if (current.second - 1 >= startY && layoutSearchData[current.first][current.second - 1].visited != true && layout[current.first][current.second - 1] != -1){
+			q.push(std::pair<int, int>(current.first, current.second - 1));
+			layoutSearchData[current.first][current.second - 1].visited = true;
+			layoutSearchData[current.first][current.second - 1].parent = current;
+		}
+		if (current.second + 1 <= endY && layoutSearchData[current.first][current.second + 1].visited != true && layout[current.first][current.second + 1] != -1){
+			q.push(std::pair<int, int>(current.first, current.second + 1));
+			layoutSearchData[current.first][current.second + 1].visited = true;
+			layoutSearchData[current.first][current.second + 1].parent = current;
+		}
+	}
+
+
+
+
+
+
+	//4. Place start
+	if (startRegion){
+		std::pair<int, int> current(startPosX, startPosY);
+		while (current.first > -1){
+			current = layoutSearchData[current.first][current.second].parent;
+			if (layout[current.first][current.second] < 1) layout[current.first][current.second] = 1;
+		}
+	}
+
+	//5. Place treasure rooms
+	std::pair<int, int> current(treasureRoomX, treasureRoomY);
+	while (current.first > -1){
+		current = layoutSearchData[current.first][current.second].parent;
+		if (layout[current.first][current.second] < 1) layout[current.first][current.second] = 1;
+	}
+
+	//6. Place objective rooms
+	current = std::pair<int, int>(con1X, con1Y);
+	while (current.first > -1){
+		current = layoutSearchData[current.first][current.second].parent;
+		if (layout[current.first][current.second] < 1) layout[current.first][current.second] = 1;
+	}
+
+	//Link up the second door
+	if (con2X != -1){
+		current = std::pair<int, int>(con2X, con2Y);
+		while (current.first > -1){
+			current = layoutSearchData[current.first][current.second].parent;
+			if (layout[current.first][current.second] < 1) layout[current.first][current.second] = 1;
+		}
+	}
+
+
+}
+
 
 void ALevelGenerationScriptActor::ExploreLevel(){
 	std::pair<int, int> current = rooms.front();
