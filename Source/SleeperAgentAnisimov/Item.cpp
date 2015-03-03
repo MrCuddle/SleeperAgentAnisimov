@@ -42,10 +42,10 @@ void AItem::OnOverlapBegin(class AActor* OtherActor, class UPrimitiveComponent* 
 	}
 }
 
-void AItem::UseItem()
+void AItem::UseItem_Implementation()
 {
 	TArray<UActorComponent*> ItemComponents = GetComponents();
-
+	
 	for (UActorComponent* c : ItemComponents)
 	{
 		if (c && c->IsA(ItemComponentBlueprint))
