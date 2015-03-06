@@ -26,6 +26,9 @@ public:
 	UPROPERTY(VisibleAnywhere, Category = "Item Component")
 	class UArrowComponent* Arrow1;
 
+	UPROPERTY(VisibleAnywhere, Category = "Item Component")
+	class UPawnNoiseEmitterComponent* NoiseEmitter1;
+
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Item Properties")
 	bool Spawnable;
 

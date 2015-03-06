@@ -18,6 +18,8 @@ AItem::AItem(const FObjectInitializer& ObjectInitializer)
 	FRotator capsuleRotator = FRotator(90.0f, 0.0f, 0.0f);
 	Capsule1->SetWorldRotation(capsuleRotator);
 	
+	NoiseEmitter1 = ObjectInitializer.CreateDefaultSubobject<UPawnNoiseEmitterComponent>(this, TEXT("NoiseEmitter1"));
+
 	myRootComponent = ObjectInitializer.CreateDefaultSubobject<USceneComponent>(this, TEXT("Root"));
 
 	Arrow1 = ObjectInitializer.CreateDefaultSubobject<UArrowComponent>(this, TEXT("Arrow1"));
@@ -26,6 +28,7 @@ AItem::AItem(const FObjectInitializer& ObjectInitializer)
 
 	StaticMesh1->AttachParent = RootComponent;
 	Capsule1->AttachParent = RootComponent;
+	
 
 	Capsule1->OnComponentBeginOverlap.AddDynamic(this, &AItem::OnOverlapBegin);        // set up a notification for when this component overlaps something
 
