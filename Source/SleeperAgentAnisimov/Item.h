@@ -37,6 +37,7 @@ public:
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "ItemFunctions")
 	void UseItem();
+	virtual void UseItem_Implementation();
 
 	AItem(const FObjectInitializer& ObjectInitializer);
 
