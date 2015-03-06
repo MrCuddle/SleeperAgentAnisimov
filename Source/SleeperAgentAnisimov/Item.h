@@ -14,17 +14,20 @@ class SLEEPERAGENTANISIMOV_API AItem : public AActor
 	GENERATED_BODY()
 public:
 	
-	UPROPERTY(VisibleAnywhere, Category = "Item Components")
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Item Components")
 	class UStaticMeshComponent* StaticMesh1;
 	
-	UPROPERTY(VisibleAnywhere, Category = "Item Component")
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Item Component")
 	class UCapsuleComponent* Capsule1;
 
 	UPROPERTY(VisibleAnywhere, Category = "Item Component")
 	class USceneComponent* myRootComponent;
 
-	UPROPERTY(VisibleAnywhere, Category = "Item Component")
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Item Component")
 	class UArrowComponent* Arrow1;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Item Component")
+	class UPawnNoiseEmitterComponent* NoiseEmitter1;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Item Properties")
 	bool Spawnable;
@@ -35,8 +38,9 @@ public:
 	UFUNCTION()
 	void OnOverlapBegin(class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 
-	UFUNCTION(BlueprintCallable, Category="ItemFunctions")
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "ItemFunctions")
 	void UseItem();
+	virtual void UseItem_Implementation();
 
 	AItem(const FObjectInitializer& ObjectInitializer);
 
