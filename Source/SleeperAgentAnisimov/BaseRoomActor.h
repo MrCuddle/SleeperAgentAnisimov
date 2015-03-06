@@ -5,6 +5,44 @@
 #include "GameFramework/Actor.h"
 #include "BaseRoomActor.generated.h"
 
+
+USTRUCT(blueprintable)
+struct FGuardStruct{
+
+	GENERATED_USTRUCT_BODY()
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Level Generation")
+	FVector2D spawnLocation;
+		
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Level Generation")
+	int32 patrolRouteIndex;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Level Generation")
+	int32 startIndex;
+
+	FGuardStruct(){
+		patrolRouteIndex = -1;
+		startIndex = 0;
+		spawnLocation = FVector2D();
+	}
+
+};
+
+USTRUCT(blueprintable)
+struct FPatrolRouteStruct{
+
+	GENERATED_USTRUCT_BODY()
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Level Generation")
+	TArray<FVector2D> patrolPoints;
+
+
+	FPatrolRouteStruct(){
+		patrolPoints = TArray<FVector2D>();
+	}
+
+};
+
 /**
  * 
  */
@@ -41,7 +79,12 @@ public:
 	TArray<FVector2D> ItemLocations;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Level Generation")
 	TArray<FVector2D> GuardLocations;
-	
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Level Generation")
+	TArray<FGuardStruct> Guards;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Level Generation")
+	TArray<FPatrolRouteStruct> PatrolRoutes;
+
 	UFUNCTION(BlueprintImplementableEvent, Category = "Level Generation")
 	virtual void GenerateRoom();
 	

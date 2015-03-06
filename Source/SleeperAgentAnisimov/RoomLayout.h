@@ -1,4 +1,6 @@
 // Fill out your copyright notice in the Description page of Project Settings.
+#include "BaseRoomActor.h"
+
 
 #pragma once
 
@@ -15,10 +17,14 @@ public:
 	bool eastDoor;
 	bool southDoor;
 	bool westDoor;
+	int rarity;
+	int type;
 	TArray<FVector2D> floorLocations;
 	TArray<FVector2D> hWallLocations;
 	TArray<FVector2D> vWallLocations;
 	TArray<FVector2D> itemLocations;
-	TArray<FVector2D> guardLocations;
+	TArray<FGuardStruct> guards;
+	TArray<FPatrolRouteStruct> patrolRoutes;
+	int testtest;
 
 };
