@@ -14,19 +14,19 @@ class SLEEPERAGENTANISIMOV_API AItem : public AActor
 	GENERATED_BODY()
 public:
 	
-	UPROPERTY(VisibleAnywhere, Category = "Item Components")
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Item Components")
 	class UStaticMeshComponent* StaticMesh1;
 	
-	UPROPERTY(VisibleAnywhere, Category = "Item Component")
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Item Component")
 	class UCapsuleComponent* Capsule1;
 
 	UPROPERTY(VisibleAnywhere, Category = "Item Component")
 	class USceneComponent* myRootComponent;
 
-	UPROPERTY(VisibleAnywhere, Category = "Item Component")
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Item Component")
 	class UArrowComponent* Arrow1;
 
-	UPROPERTY(VisibleAnywhere, Category = "Item Component")
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Item Component")
 	class UPawnNoiseEmitterComponent* NoiseEmitter1;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Item Properties")
