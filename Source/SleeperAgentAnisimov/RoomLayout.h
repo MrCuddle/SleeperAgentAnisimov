@@ -25,6 +25,4 @@ public:
 	TArray<FVector2D> itemLocations;
 	TArray<FGuardStruct> guards;
 	TArray<FPatrolRouteStruct> patrolRoutes;
-	int testtest;
-
 };

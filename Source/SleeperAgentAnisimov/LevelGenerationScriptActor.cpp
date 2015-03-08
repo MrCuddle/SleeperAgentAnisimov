@@ -74,12 +74,24 @@ void ALevelGenerationScriptActor::LoadRoomLayout(FString path){
 		roomLayout->southDoor = JsonParsed->GetBoolField("southDoor");
 		roomLayout->westDoor = JsonParsed->GetBoolField("westDoor");
 		roomLayout->rarity = (int)JsonParsed->GetNumberField("roomRarity");
-		roomLayout->rarity = (int)JsonParsed->GetNumberField("roomType");
+		roomLayout->type = (int)JsonParsed->GetNumberField("roomType");
+
+
+		TArray<TSharedPtr<FJsonValue>> patrolRoutes = JsonParsed->GetArrayField("patrolRoutes");
+		for (int i = 0; i < patrolRoutes.Num(); ++i){
+			FPatrolRouteStruct pr = FPatrolRouteStruct();
+
+			TArray<TSharedPtr<FJsonValue>> patrolPoints = patrolRoutes[i]->AsObject()->GetArrayField("patrolPoints");
+			for (int j = 0; j < patrolPoints.Num(); ++j){
+				pr.patrolPoints.Add(FVector2D(patrolPoints[j]->AsObject()->GetNumberField("x"), patrolPoints[j]->AsObject()->GetNumberField("y")));
+			}
+			roomLayout->patrolRoutes.Add(pr);
+		}
 
 		TArray<TSharedPtr<FJsonValue>> spawnGroups = JsonParsed->GetArrayField("spawnGroups");
 		for (int i = 0; i < spawnGroups.Num(); ++i){
 			TArray<TSharedPtr<FJsonValue>> guards = spawnGroups[i]->AsObject()->GetArrayField("guards");
-			for (int j = 0; j < guards.Num(); ++i){
+			for (int j = 0; j < guards.Num(); ++j){
 				FGuardStruct g = FGuardStruct();
 				g.patrolRouteIndex = guards[j]->AsObject()->GetNumberField("patrolRouteIndex");
 				g.startIndex = (int)guards[j]->AsObject()->GetNumberField("startIndex");
@@ -87,112 +99,31 @@ void ALevelGenerationScriptActor::LoadRoomLayout(FString path){
 				roomLayout->guards.Add(g);
 			}
 			TArray<TSharedPtr<FJsonValue>> items = spawnGroups[i]->AsObject()->GetArrayField("items");
-			for (int j = 0; j < items.Num(); ++i){
+			for (int j = 0; j < items.Num(); ++j){
 				roomLayout->itemLocations.Add(FVector2D(items[j]->AsObject()->GetNumberField("x"), items[j]->AsObject()->GetNumberField("y")));
 			}
-			//TArray<TSharedPtr<FJsonValue>> meshes = spawnGroups[i]->AsObject()->GetArrayField("meshes");
-			//TArray<TSharedPtr<FJsonValue>> patrolPoints = spawnGroups[i]->AsObject()->GetArrayField("patrolPoints");
+			TArray<TSharedPtr<FJsonValue>> meshes = spawnGroups[i]->AsObject()->GetArrayField("meshes");
+			for (int j = 0; j < meshes.Num(); ++j){
+				FString type = meshes[j]->AsObject()->GetStringField("staticMesh");
+				if (type.Equals("floor")){
+					roomLayout->floorLocations.Add(FVector2D(meshes[j]->AsObject()->GetNumberField("x"), meshes[j]->AsObject()->GetNumberField("y")));
+				}
+				else if (type.Equals("hWall")){
+					roomLayout->hWallLocations.Add(FVector2D(meshes[j]->AsObject()->GetNumberField("x"), meshes[j]->AsObject()->GetNumberField("y")));
+				}
+				else if (type.Equals("vWall")){
+					roomLayout->vWallLocations.Add(FVector2D(meshes[j]->AsObject()->GetNumberField("x"), meshes[j]->AsObject()->GetNumberField("y")));
+				}
+			}
 		}
+
 	}
 
-	////Read the locations of doors
-	//RoomLayout *roomLayout = new RoomLayout();
-	//if (strings[0][0] == '1') { roomLayout->northDoor = true; northRooms.push_back(roomLayout); }
-	//else { roomLayout->northDoor = false; }
-	//if (strings[0][1] == '1') { roomLayout->eastDoor = true; eastRooms.push_back(roomLayout); }
-	//else { roomLayout->eastDoor = false; }
-	//if (strings[0][2] == '1') { roomLayout->southDoor = true; southRooms.push_back(roomLayout); }
-	//else { roomLayout->southDoor = false; }
-	//if (strings[0][3] == '1') { roomLayout->westDoor = true; westRooms.push_back(roomLayout); }
-	//else { roomLayout->westDoor = false; }
+	if (roomLayout->northDoor) northRooms.push_back(roomLayout);
+	if (roomLayout->eastDoor) eastRooms.push_back(roomLayout);
+	if (roomLayout->southDoor) southRooms.push_back(roomLayout);
+	if (roomLayout->westDoor) westRooms.push_back(roomLayout);
 
-	////Read the locations of floor tiles
-	//TArray<FVector2D> floor;
-
-	//TArray<FString> floorStrings;
-	//strings[1].ParseIntoArrayWS(&floorStrings);
-	//
-	//for (int i = 0; i < floorStrings.Num(); i++){
-	//	FString sX, sY;
-	//	floorStrings[i].Split(FString(","), &sX, &sY);
-	//	int x = 0, y = 0;
-	//	FDefaultValueHelper::ParseInt(sX, x);
-	//	FDefaultValueHelper::ParseInt(sY, y);
-	//	floor.Add(FVector2D(x, y));
-	//}
-
-	//roomLayout->floorLocations = floor;
-
-	////Read the locations of horizontal walls
-	//TArray<FVector2D> horizontalWalls;
-
-	//TArray<FString> hWallStrings;
-	//strings[2].ParseIntoArrayWS(&hWallStrings);
-
-	//for (int i = 0; i < hWallStrings.Num(); i++){
-	//	FString sX, sY;
-	//	hWallStrings[i].Split(FString(","), &sX, &sY);
-	//	int x = 0, y = 0;
-	//	FDefaultValueHelper::ParseInt(sX, x);
-	//	FDefaultValueHelper::ParseInt(sY, y);
-	//	horizontalWalls.Add(FVector2D(x, y));
-	//}
-
-	//roomLayout->hWallLocations = horizontalWalls;
-
-	////Read the locations of vertical walls
-	//TArray<FVector2D> verticalWalls;
-
-	//TArray<FString> vWallStrings;
-	//strings[3].ParseIntoArrayWS(&vWallStrings);
-
-	//for (int i = 0; i < vWallStrings.Num(); i++){
-	//	FString sX, sY;
-	//	vWallStrings[i].Split(FString(","), &sX, &sY);
-	//	int x = 0, y = 0;
-	//	FDefaultValueHelper::ParseInt(sX, x);
-	//	FDefaultValueHelper::ParseInt(sY, y);
-	//	verticalWalls.Add(FVector2D(x, y));
-	//}
-
-	//roomLayout->vWallLocations = verticalWalls;
-
-	////Items:
-	//TArray<FVector2D> items;
-
-	//TArray<FString> itemStrings;
-	//strings[4].ParseIntoArrayWS(&itemStrings);
-
-	//for (int i = 0; i < itemStrings.Num(); i++){
-	//	FString sX, sY;
-	//	itemStrings[i].Split(FString(","), &sX, &sY);
-	//	int x = 0, y = 0;
-	//	FDefaultValueHelper::ParseInt(sX, x);
-	//	FDefaultValueHelper::ParseInt(sY, y);
-	//	items.Add(FVector2D(x, y));
-	//}
-
-	//roomLayout->itemLocations = items;
-
-	////Guards:
-	//TArray<FVector2D> guards;
-
-	//TArray<FString> guardStrings;
-	//strings[5].ParseIntoArrayWS(&guardStrings);
-
-	//for (int i = 0; i < guardStrings.Num(); i++){
-	//	FString sX, sY;
-	//	guardStrings[i].Split(FString(","), &sX, &sY);
-	//	int x = 0, y = 0;
-	//	FDefaultValueHelper::ParseInt(sX, x);
-	//	FDefaultValueHelper::ParseInt(sY, y);
-	//	guards.Add(FVector2D(x, y));
-	//}
-
-	//roomLayout->guardLocations = guards;
-
-	////Read the locations of everything else
-	////TODO
 }
 
 void ALevelGenerationScriptActor::GenerateLevel(){
