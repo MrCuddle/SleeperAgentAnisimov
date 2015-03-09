@@ -39,8 +39,8 @@ public:
 	void OnOverlapBegin(class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "ItemFunctions")
-	void UseItem();
-	virtual void UseItem_Implementation();
+	void UseItem(FVector targetLocation);
+	virtual void UseItem_Implementation(FVector targetLocation);
 
 	AItem(const FObjectInitializer& ObjectInitializer);
 
