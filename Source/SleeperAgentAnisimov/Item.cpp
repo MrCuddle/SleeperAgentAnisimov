@@ -45,7 +45,7 @@ void AItem::OnOverlapBegin(class AActor* OtherActor, class UPrimitiveComponent* 
 	}
 }
 
-void AItem::UseItem_Implementation()
+void AItem::UseItem_Implementation(FVector targetLocation)
 {
 	TArray<UActorComponent*> ItemComponents = GetComponents();
 	
@@ -56,7 +56,7 @@ void AItem::UseItem_Implementation()
 			//GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, Name + " used component: " + c->GetName());
 			
 			UFunction* func = c->FindFunction(FName("OnUse"));
-			c->ProcessEvent(func, nullptr);
+			c->ProcessEvent(func, &targetLocation);
 		}
 	}
 	
