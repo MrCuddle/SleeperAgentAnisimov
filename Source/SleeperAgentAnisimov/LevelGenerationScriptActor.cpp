@@ -312,9 +312,9 @@ void ALevelGenerationScriptActor::GenerateLevel(){
 					
 
 					if (room){
-						if (j < 8 && layout[i][j + 1] > 0)
+						if (j < levelHeight && layout[i][j + 1] > 0)
 							room->SouthDoor = true;
-						if (i < 8 && layout[i + 1][j] > 0)
+						if (i < levelWidth && layout[i + 1][j] > 0)
 							room->EastDoor = true;
 						if (i > 0 && layout[i - 1][j] > 0)
 							room->WestDoor = true;
