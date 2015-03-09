@@ -52,6 +52,10 @@ private:
 	std::vector<RoomLayout*> eastRooms;
 	std::vector<RoomLayout*> southRooms;
 	std::vector<RoomLayout*> westRooms;
+	std::vector<RoomLayout*> treasureRooms;
+	std::vector<RoomLayout*> normalRooms;
+	std::vector<RoomLayout*> objectiveRooms;
+	std::vector<RoomLayout*> startRooms;
 
 	void LoadRoomLayouts();
 	void LoadRoomLayout(FString path);

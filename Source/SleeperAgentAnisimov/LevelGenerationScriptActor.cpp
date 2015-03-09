@@ -49,12 +49,14 @@ void ALevelGenerationScriptActor::LoadRoomLayouts(){
 	sort(eastRooms.begin(), eastRooms.end());
 	sort(southRooms.begin(), southRooms.end());
 	sort(westRooms.begin(), westRooms.end());
+	sort(normalRooms.begin(), normalRooms.end());
+	sort(treasureRooms.begin(), treasureRooms.end());
+	sort(objectiveRooms.begin(), objectiveRooms.end());
+	sort(startRooms.begin(), startRooms.end());
 	
 }
 
 void ALevelGenerationScriptActor::LoadRoomLayout(FString path){
-	//TArray<FString> strings;
-	//FFileHelper::LoadANSITextFileToStrings(*path, NULL, strings);
 
 	RoomLayout *roomLayout = new RoomLayout();
 
@@ -69,14 +71,19 @@ void ALevelGenerationScriptActor::LoadRoomLayout(FString path){
 
 	FJsonSerializer serializer = FJsonSerializer();
 	if (serializer.Deserialize(JsonReader, JsonParsed)){
+		//Doors
 		roomLayout->northDoor = JsonParsed->GetBoolField("northDoor");
 		roomLayout->eastDoor = JsonParsed->GetBoolField("eastDoor");
 		roomLayout->southDoor = JsonParsed->GetBoolField("southDoor");
 		roomLayout->westDoor = JsonParsed->GetBoolField("westDoor");
+
+		//Rarity
 		roomLayout->rarity = (int)JsonParsed->GetNumberField("roomRarity");
+
+		//Type
 		roomLayout->type = (int)JsonParsed->GetNumberField("roomType");
 
-
+		//Patrol routes
 		TArray<TSharedPtr<FJsonValue>> patrolRoutes = JsonParsed->GetArrayField("patrolRoutes");
 		for (int i = 0; i < patrolRoutes.Num(); ++i){
 			FPatrolRouteStruct pr = FPatrolRouteStruct();
@@ -88,6 +95,7 @@ void ALevelGenerationScriptActor::LoadRoomLayout(FString path){
 			roomLayout->patrolRoutes.Add(pr);
 		}
 
+		//Guards, items and meshes
 		TArray<TSharedPtr<FJsonValue>> spawnGroups = JsonParsed->GetArrayField("spawnGroups");
 		for (int i = 0; i < spawnGroups.Num(); ++i){
 			TArray<TSharedPtr<FJsonValue>> guards = spawnGroups[i]->AsObject()->GetArrayField("guards");
@@ -119,10 +127,25 @@ void ALevelGenerationScriptActor::LoadRoomLayout(FString path){
 
 	}
 
+	//Set up the room sets
 	if (roomLayout->northDoor) northRooms.push_back(roomLayout);
 	if (roomLayout->eastDoor) eastRooms.push_back(roomLayout);
 	if (roomLayout->southDoor) southRooms.push_back(roomLayout);
 	if (roomLayout->westDoor) westRooms.push_back(roomLayout);
+	switch (roomLayout->type) {
+	case 0:
+		normalRooms.push_back(roomLayout);
+		break;
+	case 1:
+		treasureRooms.push_back(roomLayout);
+		break;
+	case 2:
+		objectiveRooms.push_back(roomLayout);
+		break;
+	case 3:
+		startRooms.push_back(roomLayout);
+		break;
+	}
 
 }
 
@@ -133,16 +156,7 @@ void ALevelGenerationScriptActor::GenerateLevel(){
 
 		PlanLayout();
 
-
-		//Old layout generation
-		//while (nRooms > 0){
-		//	rooms.push(std::pair<int, int>(4, 4));
-		//	while (!rooms.empty()){
-		//		ExploreLevel();
-		//	}
-		//}
-
-		//Spawn the rooms
+		//Spawn the rooms according to planned layout
 		for (int i = 0; i < levelWidth; i++)
 		{
 			for (int j = 0; j < levelHeight; j++)
@@ -150,11 +164,69 @@ void ALevelGenerationScriptActor::GenerateLevel(){
 				if (layout[i][j] > 0)
 				{
 					std::vector<RoomLayout*> outputSet;
+
+					//Pick potential rooms based on room TYPE
+					if (layout[i][j] == 1) //Normal room
+					{
+						if (outputSet.empty())
+						{
+							outputSet = normalRooms;
+						}
+						else {
+							std::vector<RoomLayout*> newOutput;
+							std::set_intersection(outputSet.begin(), outputSet.end(), normalRooms.begin(), normalRooms.end(), std::back_inserter(newOutput));
+							outputSet = newOutput;
+						}
+					}
+					else if (layout[i][j] == 2) //Start room
+					{
+						if (outputSet.empty())
+						{
+							outputSet = startRooms;
+						}
+						else {
+							std::vector<RoomLayout*> newOutput;
+							std::set_intersection(outputSet.begin(), outputSet.end(), startRooms.begin(), startRooms.end(), std::back_inserter(newOutput));
+							outputSet = newOutput;
+						}
+					}
+					else if (layout[i][j] == 3) //Treasure room
+					{
+						if (outputSet.empty())
+						{
+							outputSet = treasureRooms;
+						}
+						else {
+							std::vector<RoomLayout*> newOutput;
+							std::set_intersection(outputSet.begin(), outputSet.end(), treasureRooms.begin(), treasureRooms.end(), std::back_inserter(newOutput));
+							outputSet = newOutput;
+						}
+					}
+					else if (layout[i][j] == 4) //Objective room
+					{
+						if (outputSet.empty())
+						{
+							outputSet = objectiveRooms;
+						}
+						else {
+							std::vector<RoomLayout*> newOutput;
+							std::set_intersection(outputSet.begin(), outputSet.end(), objectiveRooms.begin(), objectiveRooms.end(), std::back_inserter(newOutput));
+							outputSet = newOutput;
+						}
+					}
+
+
+					//Pick potential rooms based on available doors
 					if (j < 8 && layout[i][j + 1] > 0)
 					{
 						if (outputSet.empty())
 						{
 							outputSet = southRooms;
+						}
+						else {
+							std::vector<RoomLayout*> newOutput;
+							std::set_intersection(outputSet.begin(), outputSet.end(), southRooms.begin(), southRooms.end(), std::back_inserter(newOutput));
+							outputSet = newOutput;
 						}
 					}
 					if (i < 8 && layout[i + 1][j] > 0)
@@ -198,25 +270,43 @@ void ALevelGenerationScriptActor::GenerateLevel(){
 						}
 					}
 
-					RoomLayout* roomLayout = outputSet[rand() % outputSet.size()];
-
-					if (i == 4 && j == 4){
-						if (roomLayout->northDoor){
-							PlayerSpawn = FVector2D(600, 200);
-						}
-						else if (roomLayout->eastDoor){
-							PlayerSpawn = FVector2D(1000, 600);
-						}
-						else if (roomLayout->southDoor){
-							PlayerSpawn = FVector2D(600, 1000);
-						}
-						else {
-							PlayerSpawn = FVector2D(200, 600);
-						}
+					//Try to pick rooms with fewer doors, if possible
+					if (j >=8 || layout[i][j + 1] <= 0)
+					{
+						std::vector<RoomLayout*> newOutput;
+						std::set_difference(outputSet.begin(), outputSet.end(), southRooms.begin(), southRooms.end(), std::back_inserter(newOutput));
+						if (newOutput.size() > 0)
+							outputSet = newOutput;
+					}
+					if (i >= 8 || layout[i + 1][j] <= 0)
+					{
+						std::vector<RoomLayout*> newOutput;
+						std::set_difference(outputSet.begin(), outputSet.end(), eastRooms.begin(), eastRooms.end(), std::back_inserter(newOutput));
+						if (newOutput.size() > 0)
+							outputSet = newOutput;
+					}
+					if (i <= 0 || layout[i - 1][j] <= 0)
+					{
+						std::vector<RoomLayout*> newOutput;
+						std::set_difference(outputSet.begin(), outputSet.end(), westRooms.begin(), westRooms.end(), std::back_inserter(newOutput));
+						if (newOutput.size() > 0)
+							outputSet = newOutput;
+					}
+					if (j <= 0 || layout[i][j - 1] <= 0)
+					{
+						std::vector<RoomLayout*> newOutput;
+						std::set_difference(outputSet.begin(), outputSet.end(), northRooms.begin(), northRooms.end(), std::back_inserter(newOutput));
+						if (newOutput.size() > 0)
+							outputSet = newOutput;
 					}
 
-					//int index = rand() % outputSet.size();
-					//room = (ABaseRoomActor*)world->SpawnActor<AActor>(outputSet[index], FVector(1200 * (i - 4), 1200 * (j - 4), 0), FRotator(0, 0, 0));
+					RoomLayout* roomLayout = outputSet[rand() % outputSet.size()];
+
+					//Set player spawn if this is the start room
+					if (layout[i][j] == 2){ 
+						PlayerSpawn = FVector2D(1200 * (i - 4) + 600, 1200 * (j - 4) + 600);
+					}
+
 
 					ABaseRoomActor* room = (ABaseRoomActor*)world->SpawnActor<AActor>(roomLoaderBlueprint, FVector(1200 * (i - 4), 1200 * (j - 4), 0), FRotator(0, 0, 0));
 					
@@ -240,7 +330,8 @@ void ALevelGenerationScriptActor::GenerateLevel(){
 						room->HWallLocations = roomLayout->hWallLocations;
 						room->VWallLocations = roomLayout->vWallLocations;
 						room->ItemLocations = roomLayout->itemLocations;
-						//room->GuardLocations = roomLayout->guardLocations;
+						room->Guards = roomLayout->guards;
+						room->PatrolRoutes = roomLayout->patrolRoutes;
 
 						room->GenerateRoom();
 					}
@@ -251,7 +342,7 @@ void ALevelGenerationScriptActor::GenerateLevel(){
 }
 
 void ALevelGenerationScriptActor::PlanLayout(){
-	//1 == rooom
+	//1 == room
 	//-1 == block
 	//2 == start
 	//3 == treasure room

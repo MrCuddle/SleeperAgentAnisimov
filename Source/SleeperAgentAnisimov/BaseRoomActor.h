@@ -77,8 +77,6 @@ public:
 	TArray<FVector2D> VWallLocations;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Level Generation")
 	TArray<FVector2D> ItemLocations;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Level Generation")
-	TArray<FVector2D> GuardLocations;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Level Generation")
 	TArray<FGuardStruct> Guards;
