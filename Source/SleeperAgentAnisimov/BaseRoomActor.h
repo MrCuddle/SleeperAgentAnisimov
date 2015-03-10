@@ -43,6 +43,29 @@ struct FPatrolRouteStruct{
 
 };
 
+USTRUCT(blueprintable)
+struct FStaticMeshStruct{
+
+	GENERATED_USTRUCT_BODY()
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Level Generation")
+	FVector2D location;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Level Generation")
+	float rotation;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Level Generation")
+	FString name;
+
+
+	FStaticMeshStruct(){
+		location = FVector2D();
+		rotation = 0.0;
+		name = "";
+	}
+
+};
+
 /**
  * 
  */
@@ -70,11 +93,8 @@ public:
 	bool WestDoorPossible;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Level Generation")
-	TArray<FVector2D> FloorLocations;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Level Generation")
-	TArray<FVector2D> HWallLocations;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Level Generation")
-	TArray<FVector2D> VWallLocations;
+	TArray<FStaticMeshStruct> StaticMeshes;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Level Generation")
 	TArray<FVector2D> ItemLocations;
 

@@ -112,16 +112,12 @@ void ALevelGenerationScriptActor::LoadRoomLayout(FString path){
 			}
 			TArray<TSharedPtr<FJsonValue>> meshes = spawnGroups[i]->AsObject()->GetArrayField("meshes");
 			for (int j = 0; j < meshes.Num(); ++j){
-				FString type = meshes[j]->AsObject()->GetStringField("staticMesh");
-				if (type.Equals("floor")){
-					roomLayout->floorLocations.Add(FVector2D(meshes[j]->AsObject()->GetNumberField("x"), meshes[j]->AsObject()->GetNumberField("y")));
-				}
-				else if (type.Equals("hWall")){
-					roomLayout->hWallLocations.Add(FVector2D(meshes[j]->AsObject()->GetNumberField("x"), meshes[j]->AsObject()->GetNumberField("y")));
-				}
-				else if (type.Equals("vWall")){
-					roomLayout->vWallLocations.Add(FVector2D(meshes[j]->AsObject()->GetNumberField("x"), meshes[j]->AsObject()->GetNumberField("y")));
-				}
+				FStaticMeshStruct mesh = FStaticMeshStruct();
+				mesh.name = meshes[j]->AsObject()->GetStringField("staticMesh");
+				mesh.location = FVector2D(meshes[j]->AsObject()->GetNumberField("x"), meshes[j]->AsObject()->GetNumberField("y"));
+				mesh.rotation = meshes[j]->AsObject()->GetNumberField("rotation");
+				roomLayout->staticMeshes.Add(mesh);
+
 			}
 		}
 
@@ -326,9 +322,8 @@ void ALevelGenerationScriptActor::GenerateLevel(){
 						room->SouthDoorPossible = roomLayout->southDoor;
 						room->WestDoorPossible = roomLayout->westDoor;
 
-						room->FloorLocations = roomLayout->floorLocations;
-						room->HWallLocations = roomLayout->hWallLocations;
-						room->VWallLocations = roomLayout->vWallLocations;
+						room->StaticMeshes = roomLayout->staticMeshes;
+						
 						room->ItemLocations = roomLayout->itemLocations;
 						room->Guards = roomLayout->guards;
 						room->PatrolRoutes = roomLayout->patrolRoutes;

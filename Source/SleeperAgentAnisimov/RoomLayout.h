@@ -19,9 +19,7 @@ public:
 	bool westDoor;
 	int rarity;
 	int type;
-	TArray<FVector2D> floorLocations;
-	TArray<FVector2D> hWallLocations;
-	TArray<FVector2D> vWallLocations;
+	TArray<FStaticMeshStruct> staticMeshes;
 	TArray<FVector2D> itemLocations;
 	TArray<FGuardStruct> guards;
 	TArray<FPatrolRouteStruct> patrolRoutes;
