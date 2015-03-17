@@ -36,6 +36,7 @@ class SLEEPERAGENTANISIMOV_API ALevelGenerationScriptActor : public ALevelScript
 
 	GENERATED_BODY()
 	int layout[levelWidth][levelHeight];
+	ABaseRoomActor* layoutRooms[levelWidth][levelHeight];
 	SearchData layoutSearchData[levelWidth][levelHeight];
 	int nRooms;
 	std::queue<std::pair<int, int>> rooms;

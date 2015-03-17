@@ -3,6 +3,7 @@
 #pragma once
 
 #include "GameFramework/Actor.h"
+#include "BaseDoor.h"
 #include "BaseRoomActor.generated.h"
 
 
@@ -91,6 +92,8 @@ public:
 	bool SouthDoorPossible;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Level Generation")
 	bool WestDoorPossible;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Level Generation")
+	bool Ceiling;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Level Generation")
 	TArray<FStaticMeshStruct> StaticMeshes;
@@ -102,6 +105,15 @@ public:
 	TArray<FGuardStruct> Guards;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Level Generation")
 	TArray<FPatrolRouteStruct> PatrolRoutes;
+
+
+	//The north door
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Level Generation")
+	ABaseDoor* northDoorActor;
+
+	//The east door
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Level Generation")
+	ABaseDoor* eastDoorActor;
 
 	UFUNCTION(BlueprintImplementableEvent, Category = "Level Generation")
 	virtual void GenerateRoom();

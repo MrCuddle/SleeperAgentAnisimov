@@ -305,22 +305,39 @@ void ALevelGenerationScriptActor::GenerateLevel(){
 
 
 					ABaseRoomActor* room = (ABaseRoomActor*)world->SpawnActor<AActor>(roomLoaderBlueprint, FVector(1200 * (i - 4), 1200 * (j - 4), 0), FRotator(0, 0, 0));
-					
+					layoutRooms[i][j] = room;
+
 
 					if (room){
 						if (j < levelHeight && layout[i][j + 1] > 0)
 							room->SouthDoor = true;
+						else
+							room->SouthDoor = false;
 						if (i < levelWidth && layout[i + 1][j] > 0)
 							room->EastDoor = true;
+						else
+							room->EastDoor = false;
 						if (i > 0 && layout[i - 1][j] > 0)
 							room->WestDoor = true;
+						else
+							room->WestDoor = false;
 						if (j > 0 && layout[i][j - 1] > 0)
 							room->NorthDoor = true;
+						else
+							room->NorthDoor = false;
 
 						room->NorthDoorPossible = roomLayout->northDoor;
 						room->EastDoorPossible = roomLayout->eastDoor;
 						room->SouthDoorPossible = roomLayout->southDoor;
 						room->WestDoorPossible = roomLayout->westDoor;
+
+						//If this is the start room, don't start it with a ceiling
+						if (layout[i][j] == 2){
+							room->Ceiling = false;
+						}
+						else {
+							room->Ceiling = true;
+						}
 
 						room->StaticMeshes = roomLayout->staticMeshes;
 						
@@ -333,6 +350,26 @@ void ALevelGenerationScriptActor::GenerateLevel(){
 				}
 			}
 		}
+
+		//Go through the spawned rooms and set up adjacency for their doors
+		for (int i = 0; i < levelWidth; i++)
+		{
+			for (int j = 0; j < levelHeight; j++)
+			{
+				if (layoutRooms[i][j] != nullptr)
+				{
+					if (layoutRooms[i][j]->NorthDoor){
+						layoutRooms[i][j]->northDoorActor->roomA = layoutRooms[i][j];
+						layoutRooms[i][j]->northDoorActor->roomB = layoutRooms[i][j - 1];
+					}
+					if (layoutRooms[i][j]->EastDoor){
+						layoutRooms[i][j]->eastDoorActor->roomA = layoutRooms[i][j];
+						layoutRooms[i][j]->eastDoorActor->roomB = layoutRooms[i + 1][j];
+					}
+				}
+			}
+		}
+
 	}
 }
 
