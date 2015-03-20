@@ -30,6 +30,22 @@ struct FGuardStruct{
 };
 
 USTRUCT(blueprintable)
+struct FCameraStruct{
+	GENERATED_USTRUCT_BODY()
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Level Generation")
+	FVector2D location;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Level Generation")
+	float rotation;
+
+	FCameraStruct(){
+		location = FVector2D();
+		rotation = 0.0;
+	}
+};
+
+USTRUCT(blueprintable)
 struct FPatrolRouteStruct{
 
 	GENERATED_USTRUCT_BODY()
@@ -103,6 +119,8 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Level Generation")
 	TArray<FGuardStruct> Guards;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Level Generation")
+	TArray<FCameraStruct> Cameras;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Level Generation")
 	TArray<FPatrolRouteStruct> PatrolRoutes;
 

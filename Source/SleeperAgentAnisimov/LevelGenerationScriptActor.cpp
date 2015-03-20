@@ -119,6 +119,14 @@ void ALevelGenerationScriptActor::LoadRoomLayout(FString path){
 				roomLayout->staticMeshes.Add(mesh);
 
 			}
+			TArray<TSharedPtr<FJsonValue>> cameras = spawnGroups[i]->AsObject()->GetArrayField("cameras");
+			for (int j = 0; j < cameras.Num(); ++j){
+				FCameraStruct camera = FCameraStruct();
+				camera.location = FVector2D(cameras[j]->AsObject()->GetNumberField("x"), cameras[j]->AsObject()->GetNumberField("y"));
+				camera.rotation = cameras[j]->AsObject()->GetNumberField("rotation");
+				roomLayout->cameras.Add(camera);
+
+			}
 		}
 
 	}
@@ -344,7 +352,7 @@ void ALevelGenerationScriptActor::GenerateLevel(){
 						room->ItemLocations = roomLayout->itemLocations;
 						room->Guards = roomLayout->guards;
 						room->PatrolRoutes = roomLayout->patrolRoutes;
-
+						room->Cameras = roomLayout->cameras;
 						room->GenerateRoom();
 					}
 				}
@@ -419,40 +427,40 @@ void ALevelGenerationScriptActor::PlanLayout(){
 	if (splitTop){
 		topConV = rand() % (vSplit - 1);
 		layout[hSplitTop - 1][topConV] = 5;
-		layout[hSplitTop][topConV] = 5;
+		layout[hSplitTop][topConV] = 1;
 	}
 	//Connect the bottom two areas 
 	if (splitBottom){
 		botConV = vSplit + 1 + rand() % (levelHeight - vSplit - 1);
 		layout[hSplitBottom - 1][botConV] = 5;
-		layout[hSplitBottom][botConV] = 5;
+		layout[hSplitBottom][botConV] = 1;
 	}
 	//Connect the bottom and the top areas
 	if (startTop){
 		midConH = std::max(hSplitTop, hSplitBottom) + 1 + rand() % (levelWidth - std::max(hSplitTop, hSplitBottom) - 1);
 		layout[midConH][vSplit - 1] = 5;
-		layout[midConH][vSplit] = 5;
+		layout[midConH][vSplit] = 1;
 	}
 	else {
 		midConH = rand() % (std::min(hSplitTop == 0 ? levelWidth : hSplitTop, hSplitBottom == 0 ? levelWidth : hSplitBottom) - 1);
 		layout[midConH][vSplit - 1] = 5;
-		layout[midConH][vSplit] = 5;
+		layout[midConH][vSplit] = 1;
 	}
 	//Block the border tiles
 	for (int i = 0; i < levelWidth; i++){
-		if (layout[i][vSplit - 1] != 5) layout[i][vSplit - 1] = -1;
-		if (layout[i][vSplit] != 5) layout[i][vSplit] = -1;
+		if (layout[i][vSplit - 1] < 1) layout[i][vSplit - 1] = -1;
+		if (layout[i][vSplit] < 1) layout[i][vSplit] = -1;
 	}
 	if (splitTop){
 		for (int i = 0; i < vSplit; i++){
-			if (layout[hSplitTop - 1][i] != 5)layout[hSplitTop - 1][i] = -1;
-			if (layout[hSplitTop][i] != 5)layout[hSplitTop][i] = -1;
+			if (layout[hSplitTop - 1][i] < 1)layout[hSplitTop - 1][i] = -1;
+			if (layout[hSplitTop][i] < 1)layout[hSplitTop][i] = -1;
 		}
 	}
 	if (splitBottom){
 		for (int i = vSplit; i < levelHeight; i++){
-			if (layout[hSplitBottom - 1][i] != 5)layout[hSplitBottom - 1][i] = -1;
-			if (layout[hSplitBottom][i] != 5)layout[hSplitBottom][i] = -1;
+			if (layout[hSplitBottom - 1][i] < 1)layout[hSplitBottom - 1][i] = -1;
+			if (layout[hSplitBottom][i] < 1)layout[hSplitBottom][i] = -1;
 		}
 	}
 
