@@ -29,5 +29,9 @@ public:
 	//The room on the other side of the door
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Level Generation")
 	ABaseRoomActor* roomB;
+
+	//Locked?
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Level Generation")
+	bool NeedsKeycard;
 	
 };

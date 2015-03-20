@@ -162,7 +162,7 @@ void ALevelGenerationScriptActor::GenerateLevel(){
 					std::vector<RoomLayout*> outputSet;
 
 					//Pick potential rooms based on room TYPE
-					if (layout[i][j] == 1) //Normal room
+					if (layout[i][j] == 1 || layout[i][j] == 5) //Normal room
 					{
 						if (outputSet.empty())
 						{
@@ -359,10 +359,14 @@ void ALevelGenerationScriptActor::GenerateLevel(){
 				if (layoutRooms[i][j] != nullptr)
 				{
 					if (layoutRooms[i][j]->NorthDoor){
+						if (layout[i][j] == 5)
+							layoutRooms[i][j]->northDoorActor->NeedsKeycard = true;
 						layoutRooms[i][j]->northDoorActor->roomA = layoutRooms[i][j];
 						layoutRooms[i][j]->northDoorActor->roomB = layoutRooms[i][j - 1];
 					}
 					if (layoutRooms[i][j]->EastDoor){
+						if (layout[i][j] == 5)
+							layoutRooms[i][j]->eastDoorActor->NeedsKeycard = true;
 						layoutRooms[i][j]->eastDoorActor->roomA = layoutRooms[i][j];
 						layoutRooms[i][j]->eastDoorActor->roomB = layoutRooms[i + 1][j];
 					}
@@ -379,6 +383,7 @@ void ALevelGenerationScriptActor::PlanLayout(){
 	//2 == start
 	//3 == treasure room
 	//4 == objective room
+	//5 == keycard door room
 
 	//New layout generation
 	//1. Split vertically (between 4 and levelHeight - 4):
@@ -413,41 +418,41 @@ void ALevelGenerationScriptActor::PlanLayout(){
 	//Connect the top two areas
 	if (splitTop){
 		topConV = rand() % (vSplit - 1);
-		layout[hSplitTop - 1][topConV] = 1;
-		layout[hSplitTop][topConV] = 1;
+		layout[hSplitTop - 1][topConV] = 5;
+		layout[hSplitTop][topConV] = 5;
 	}
 	//Connect the bottom two areas 
 	if (splitBottom){
 		botConV = vSplit + 1 + rand() % (levelHeight - vSplit - 1);
-		layout[hSplitBottom - 1][botConV] = 1;
-		layout[hSplitBottom][botConV] = 1;
+		layout[hSplitBottom - 1][botConV] = 5;
+		layout[hSplitBottom][botConV] = 5;
 	}
 	//Connect the bottom and the top areas
 	if (startTop){
 		midConH = std::max(hSplitTop, hSplitBottom) + 1 + rand() % (levelWidth - std::max(hSplitTop, hSplitBottom) - 1);
-		layout[midConH][vSplit - 1] = 1;
-		layout[midConH][vSplit] = 1;
+		layout[midConH][vSplit - 1] = 5;
+		layout[midConH][vSplit] = 5;
 	}
 	else {
 		midConH = rand() % (std::min(hSplitTop == 0 ? levelWidth : hSplitTop, hSplitBottom == 0 ? levelWidth : hSplitBottom) - 1);
-		layout[midConH][vSplit - 1] = 1;
-		layout[midConH][vSplit] = 1;
+		layout[midConH][vSplit - 1] = 5;
+		layout[midConH][vSplit] = 5;
 	}
 	//Block the border tiles
 	for (int i = 0; i < levelWidth; i++){
-		if (layout[i][vSplit - 1] != 1) layout[i][vSplit - 1] = -1;
-		if (layout[i][vSplit] != 1) layout[i][vSplit] = -1;
+		if (layout[i][vSplit - 1] != 5) layout[i][vSplit - 1] = -1;
+		if (layout[i][vSplit] != 5) layout[i][vSplit] = -1;
 	}
 	if (splitTop){
 		for (int i = 0; i < vSplit; i++){
-			if (layout[hSplitTop - 1][i] != 1)layout[hSplitTop - 1][i] = -1;
-			if (layout[hSplitTop][i] != 1)layout[hSplitTop][i] = -1;
+			if (layout[hSplitTop - 1][i] != 5)layout[hSplitTop - 1][i] = -1;
+			if (layout[hSplitTop][i] != 5)layout[hSplitTop][i] = -1;
 		}
 	}
 	if (splitBottom){
 		for (int i = vSplit; i < levelHeight; i++){
-			if (layout[hSplitBottom - 1][i] != 1)layout[hSplitBottom - 1][i] = -1;
-			if (layout[hSplitBottom][i] != 1)layout[hSplitBottom][i] = -1;
+			if (layout[hSplitBottom - 1][i] != 5)layout[hSplitBottom - 1][i] = -1;
+			if (layout[hSplitBottom][i] != 5)layout[hSplitBottom][i] = -1;
 		}
 	}
 
