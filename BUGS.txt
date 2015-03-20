@@ -1,0 +1,27 @@
+AI
+-Not noticing player sometimes
+
+
+
+
+
+
+
+
+ITEM
+-Keycard not staying in inventory adter picking up ammo (and possible other items)
+
+
+
+
+
+
+STANIEDIT
+
+
+
+
+
+
+
+MAP
