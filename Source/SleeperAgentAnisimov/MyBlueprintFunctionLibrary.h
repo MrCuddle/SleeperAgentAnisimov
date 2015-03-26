@@ -13,8 +13,11 @@ class SLEEPERAGENTANISIMOV_API UMyBlueprintFunctionLibrary : public UBlueprintFu
 {
 	GENERATED_BODY()
 public:
-		UFUNCTION(BlueprintPure, meta = (FriendlyName = "Hejsan!", CompactNodeTitle = "Test", Keywords = "asdawd"), Category = Game)
-		static FText Test();
+	UFUNCTION(BlueprintCallable, meta = (HidePin = "WorldContextObject", DefaultToSelf = "WorldContextObject", FriendlyName = "File-IO"), Category = "SaveToFile")
+		static FText STATICCPPTEST();
+
+	UFUNCTION(BlueprintCallable, meta = (HidePin = "WorldContextObject", DefaultToSelf = "WorldContextObject", FriendlyName = "File-IO"), Category = "SaveToFile")
+		static void STATICCPPVOID();
 	
 	
 	
