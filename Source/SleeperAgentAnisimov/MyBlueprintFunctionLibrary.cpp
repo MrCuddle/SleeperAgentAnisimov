@@ -4,18 +4,35 @@
 #include "MyBlueprintFunctionLibrary.h"
 #include <string>
 
-FText UMyBlueprintFunctionLibrary::STATICCPPTEST()
+bool UMyBlueprintFunctionLibrary::IsInShadows(ACharacterCPPIntermediate* actor, bool DrawDebugLines)
 {
-	FString asdas = "HHH";
-	asdas.Append("asdawda");
-	std::string asd(TCHAR_TO_UTF8(*asdas));
-	
-	
-	return FText::FromString("HEJ SIMON");
-}
+	if (!actor) return false;
+	bool inShadow = true;
+		
+	for (TObjectIterator<ULightComponent> it; it; ++it)
+	{
+		if (!it->IsVisible()) continue;
+		if (it->GetLightType() == LightType_Directional) continue;
+		if (!it->AffectsPrimitive(actor->GetLightSensitiveComponent())) continue;
+		FCollisionResponseParams resp;
 
-void UMyBlueprintFunctionLibrary::STATICCPPVOID()
-{
+		if (actor->GetWorld()->LineTraceTest(
+			it->GetComponentLocation(),
+			actor->GetLightSensitiveComponent()->GetComponentLocation(),
+			ECC_Visibility,
+			FCollisionQueryParams("Test", true, actor))) continue;
 
+		inShadow = false;
+
+		if (DrawDebugLines)
+		{
+			DrawDebugLine(actor->GetWorld(), it->GetComponentLocation(), actor->GetLightSensitiveComponent()->GetComponentLocation(), FColor::Yellow);
+			continue;
+		}
+		break;
+
+	}
+	
+	return inShadow;
 }
 

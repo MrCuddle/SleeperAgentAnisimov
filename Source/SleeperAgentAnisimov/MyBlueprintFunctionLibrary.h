@@ -3,6 +3,7 @@
 #pragma once
 
 #include "Kismet/BlueprintFunctionLibrary.h"
+#include "SleeperAgentAnisimov/CharacterCPPIntermediate.h"
 #include "MyBlueprintFunctionLibrary.generated.h"
 
 /**
@@ -13,11 +14,11 @@ class SLEEPERAGENTANISIMOV_API UMyBlueprintFunctionLibrary : public UBlueprintFu
 {
 	GENERATED_BODY()
 public:
-	UFUNCTION(BlueprintCallable, meta = (HidePin = "WorldContextObject", DefaultToSelf = "WorldContextObject", FriendlyName = "File-IO"), Category = "SaveToFile")
-		static FText STATICCPPTEST();
-
-	UFUNCTION(BlueprintCallable, meta = (HidePin = "WorldContextObject", DefaultToSelf = "WorldContextObject", FriendlyName = "File-IO"), Category = "SaveToFile")
-		static void STATICCPPVOID();
+	
+	//Returns true of the actors light-sensing component is visible to any light in the world
+	//If DrawDebugLines is true every light will be checked, otherwise the first hit return true
+	UFUNCTION(BlueprintCallable, meta = (HidePin = "WorldContextObject", DefaultToSelf = "WorldContextObject", FriendlyName = "IsInShadows"), Category = "StaniSneak")
+		static bool IsInShadows(ACharacterCPPIntermediate* actor, bool DrawDebugLines);
 	
 	
 	
