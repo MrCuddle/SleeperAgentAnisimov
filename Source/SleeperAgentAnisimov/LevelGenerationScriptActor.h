@@ -28,8 +28,8 @@ struct SearchData{
 UCLASS()
 class SLEEPERAGENTANISIMOV_API ALevelGenerationScriptActor : public ALevelScriptActor
 {
-	static const int levelWidth = 10;
-	static const int levelHeight = 10;
+	static const int levelWidth = 8;
+	static const int levelHeight = 8;
 
 	TSubclassOf<class AActor> roomLoaderBlueprint;
 	ALevelGenerationScriptActor(const class FObjectInitializer& ObjectInitializer);
@@ -62,7 +62,7 @@ private:
 	void LoadRoomLayout(FString path);
 	void ExploreLevel();
 	void PlanLayout();
-	void PlanRegion(int startX, int startY, int endX, int endY, bool startRegion, int con1X, int con1Y, int con2X, int con2Y);
+	void PlanRegion(int startX, int startY, int endX, int endY, bool startRegion, int conn1X, int conn1Y, int conn2X, int conn2Y);
 	int GetAdjacentRooms(int i, int j);
 	int GetDistanceFromStart(int i, int j);
 		
