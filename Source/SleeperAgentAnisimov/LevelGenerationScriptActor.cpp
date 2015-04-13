@@ -128,6 +128,15 @@ void ALevelGenerationScriptActor::LoadRoomLayout(FString path){
 				roomLayout->cameras.Add(camera);
 
 			}
+
+			TArray<TSharedPtr<FJsonValue>> lights = spawnGroups[i]->AsObject()->GetArrayField("lights");
+			for (int j = 0; j < lights.Num(); ++j){
+				FLightStruct light = FLightStruct();
+				light.location = FVector2D(lights[j]->AsObject()->GetNumberField("x"), lights[j]->AsObject()->GetNumberField("y"));
+				light.radius = lights[j]->AsObject()->GetNumberField("radius");
+				roomLayout->lights.Add(light);
+
+			}
 		}
 
 	}
@@ -310,11 +319,11 @@ void ALevelGenerationScriptActor::GenerateLevel(){
 
 					//Set player spawn if this is the start room
 					if (layout[i][j] == 2){ 
-						PlayerSpawn = FVector2D(1200 * (i - 4) + 600, 1200 * (j - 4) + 600);
+						PlayerSpawn = FVector2D(2020 * i + 1000, 2020 * j + 1000);
 					}
 
 
-					ABaseRoomActor* room = (ABaseRoomActor*)world->SpawnActor<AActor>(roomLoaderBlueprint, FVector(1200 * (i - 4), 1200 * (j - 4), 0), FRotator(0, 0, 0));
+					ABaseRoomActor* room = (ABaseRoomActor*)world->SpawnActor<AActor>(roomLoaderBlueprint, FVector(2020 * i, 2020 * j, 0), FRotator(0, 0, 0));
 					layoutRooms[i][j] = room;
 
 
@@ -357,6 +366,7 @@ void ALevelGenerationScriptActor::GenerateLevel(){
 						room->Guards = roomLayout->guards;
 						room->PatrolRoutes = roomLayout->patrolRoutes;
 						room->Cameras = roomLayout->cameras;
+						room->Lights = roomLayout->lights;
 						room->GenerateRoom();
 					}
 				}
