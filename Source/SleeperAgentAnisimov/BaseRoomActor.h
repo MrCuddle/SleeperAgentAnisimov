@@ -83,6 +83,26 @@ struct FStaticMeshStruct{
 
 };
 
+USTRUCT(blueprintable)
+struct FLightStruct{
+
+	GENERATED_USTRUCT_BODY()
+
+		UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Level Generation")
+		FVector2D location;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Level Generation")
+		float radius;
+
+
+
+	FLightStruct(){
+		location = FVector2D();
+		radius = 50.0f;
+	}
+
+};
+
 /**
  * 
  */
@@ -113,6 +133,9 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Level Generation")
 	TArray<FStaticMeshStruct> StaticMeshes;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Level Generation")
+	TArray<FLightStruct> Lights;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Level Generation")
 	TArray<FVector2D> ItemLocations;

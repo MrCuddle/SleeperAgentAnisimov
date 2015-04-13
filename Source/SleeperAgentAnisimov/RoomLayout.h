@@ -24,4 +24,5 @@ public:
 	TArray<FGuardStruct> guards;
 	TArray<FPatrolRouteStruct> patrolRoutes;
 	TArray<FCameraStruct> cameras;
+	TArray<FLightStruct> lights;
 };
