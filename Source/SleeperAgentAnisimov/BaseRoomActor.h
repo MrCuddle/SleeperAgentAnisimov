@@ -146,6 +146,8 @@ public:
 	TArray<FCameraStruct> Cameras;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Level Generation")
 	TArray<FPatrolRouteStruct> PatrolRoutes;
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Level Generation")
+    int32 orderOfObjectives;
 
 
 	//The north door
