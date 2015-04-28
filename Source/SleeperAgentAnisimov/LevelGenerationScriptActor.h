@@ -49,6 +49,8 @@ public:
 	FVector2D PlayerSpawn;
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Level Generation")
     ABaseRoomActor* StartRoom;
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Level Generation")
+    TArray<ABaseRoomActor*> objectives;
 
 private:
 	std::vector<RoomLayout*> northRooms;
@@ -60,6 +62,8 @@ private:
 	std::vector<RoomLayout*> objectiveRooms;
 	std::vector<RoomLayout*> startRooms;
 
+    std::vector<std::pair<int, int>> indexOfObjectiveRooms;
+
 	void LoadRoomLayouts();
 	void LoadRoomLayout(FString path);
 	void ExploreLevel();
@@ -67,5 +71,6 @@ private:
 	void PlanRegion(int startX, int startY, int endX, int endY, bool startRegion, int conn1X, int conn1Y, int conn2X, int conn2Y);
 	int GetAdjacentRooms(int i, int j);
 	int GetDistanceFromStart(int i, int j);
+    int currentObjectiveIndex = 0;
 		
 };
