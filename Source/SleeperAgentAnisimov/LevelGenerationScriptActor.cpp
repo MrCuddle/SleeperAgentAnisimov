@@ -361,12 +361,24 @@ void ALevelGenerationScriptActor::GenerateLevel(){
 							room->Ceiling = true;
 						}
 
+                        if (layout[i][j] == 4)
+                        {
+                            for (size_t k = 0; k < indexOfObjectiveRooms.size(); ++k)
+                            {
+                                if (indexOfObjectiveRooms[k].first == i && indexOfObjectiveRooms[k].second == j)
+                                    room->orderOfObjectives = k;
+                            }
+                        }
+                        else
+                            room->orderOfObjectives = -1;
+
 						room->StaticMeshes = roomLayout->staticMeshes;
 						room->ItemLocations = roomLayout->itemLocations;
 						room->Guards = roomLayout->guards;
 						room->PatrolRoutes = roomLayout->patrolRoutes;
 						room->Cameras = roomLayout->cameras;
 						room->Lights = roomLayout->lights;
+
 						room->GenerateRoom();
 					}
 				}
@@ -507,6 +519,7 @@ void ALevelGenerationScriptActor::PlanRegion(int startX, int startY, int endX, i
 			break;
 		}
 	}
+    indexOfObjectiveRooms.emplace_back(objRoomX, objRoomY);
 
 	//Perform a breadth first traversal of the region starting at one of the "doors" ---- ORRRRR the objective room??
 	std::vector<std::pair<int, int>> q;
