@@ -317,14 +317,14 @@ void ALevelGenerationScriptActor::GenerateLevel(){
 
 					RoomLayout* roomLayout = outputSet[rand() % outputSet.size()];
 
+                    ABaseRoomActor* room = (ABaseRoomActor*)world->SpawnActor<AActor>(roomLoaderBlueprint, FVector(2020 * i, 2020 * j, 0), FRotator(0, 0, 0));
+                    layoutRooms[i][j] = room;
+
 					//Set player spawn if this is the start room
 					if (layout[i][j] == 2){ 
 						PlayerSpawn = FVector2D(2020 * i + 1000, 2020 * j + 1000);
+                        StartRoom = layoutRooms[i][j];
 					}
-
-
-					ABaseRoomActor* room = (ABaseRoomActor*)world->SpawnActor<AActor>(roomLoaderBlueprint, FVector(2020 * i, 2020 * j, 0), FRotator(0, 0, 0));
-					layoutRooms[i][j] = room;
 
 
 					if (room){

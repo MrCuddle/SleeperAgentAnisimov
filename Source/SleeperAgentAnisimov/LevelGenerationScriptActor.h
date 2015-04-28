@@ -47,6 +47,8 @@ public:
 	void GenerateLevel();
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Level Generation")
 	FVector2D PlayerSpawn;
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Level Generation")
+    ABaseRoomActor* StartRoom;
 
 private:
 	std::vector<RoomLayout*> northRooms;
