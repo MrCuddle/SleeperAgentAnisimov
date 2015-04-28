@@ -16,17 +16,18 @@ bool UMyBlueprintFunctionLibrary::IsInShadows(ACharacterCPPIntermediate* actor, 
 		if (!it->AffectsPrimitive(actor->GetLightSensitiveComponent())) continue;
 		FCollisionResponseParams resp;
 
-		if (actor->GetWorld()->LineTraceTest(
+		//Borttaget
+		/*if (actor->GetWorld()->LineTraceTest(
 			it->GetComponentLocation(),
 			actor->GetLightSensitiveComponent()->GetComponentLocation(),
 			ECC_Visibility,
-			FCollisionQueryParams("Test", true, actor))) continue;
+			FCollisionQueryParams("Test", true, actor))) continue;*/
 
 		inShadow = false;
 
 		if (DrawDebugLines)
 		{
-			DrawDebugLine(actor->GetWorld(), it->GetComponentLocation(), actor->GetLightSensitiveComponent()->GetComponentLocation(), FColor::Yellow);
+			DrawDebugLine(actor->GetWorld(), it->GetComponentLocation(), actor->GetLightSensitiveComponent()->GetComponentLocation(), FColor::Red);
 			continue;
 		}
 		break;
