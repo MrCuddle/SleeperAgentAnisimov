@@ -84,6 +84,8 @@ void ALevelGenerationScriptActor::LoadRoomLayout(FString path){
 		//Type
 		roomLayout->type = (int)JsonParsed->GetNumberField("roomType");
 
+		roomLayout->floor = (int)JsonParsed->GetNumberField("roomFloor");
+
 		//Patrol routes
 		TArray<TSharedPtr<FJsonValue>> patrolRoutes = JsonParsed->GetArrayField("patrolRoutes");
 		for (int i = 0; i < patrolRoutes.Num(); ++i){
@@ -378,7 +380,7 @@ void ALevelGenerationScriptActor::GenerateLevel(){
 						room->PatrolRoutes = roomLayout->patrolRoutes;
 						room->Cameras = roomLayout->cameras;
 						room->Lights = roomLayout->lights;
-
+						room->floorType = roomLayout->floor;
 						room->GenerateRoom();
 					}
 				}
