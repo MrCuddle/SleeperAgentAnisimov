@@ -149,6 +149,8 @@ public:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Level Generation")
     int32 orderOfObjectives;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Level Generation")
+	int32 floorType;
 
 	//The north door
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Level Generation")
