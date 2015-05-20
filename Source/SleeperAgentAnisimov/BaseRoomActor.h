@@ -152,6 +152,11 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Level Generation")
 	int32 floorType;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Level Generation")
+	int32 gridX;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Level Generation")
+	int32 gridY;
+
 	//The north door
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Level Generation")
 	ABaseDoor* northDoorActor;

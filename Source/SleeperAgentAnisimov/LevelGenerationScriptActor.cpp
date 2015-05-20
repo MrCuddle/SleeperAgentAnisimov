@@ -381,6 +381,8 @@ void ALevelGenerationScriptActor::GenerateLevel(){
 						room->Cameras = roomLayout->cameras;
 						room->Lights = roomLayout->lights;
 						room->floorType = roomLayout->floor;
+						room->gridX = i;
+						room->gridY = j;
 						room->GenerateRoom();
 					}
 				}
