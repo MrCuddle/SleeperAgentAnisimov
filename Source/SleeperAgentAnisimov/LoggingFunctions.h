@@ -8,6 +8,7 @@
 #include <fstream>
 #include <ctime>
 #include <algorithm>
+#include <vector>
 using namespace std;
 #include "LoggingFunctions.generated.h"
 
@@ -36,6 +37,7 @@ public:
 	UFUNCTION(BlueprintCallable, meta = (HidePin = "WorldContextObject", DefaultToSelf = "WorldContextObject", FriendlyName = "LogItemPickup"), Category = "StaniLogging")
 		static bool LogItemPickup(AActor* player, AItem* item, FString& Result);
 	
+		static bool LogLevelLayout(vector<vector<string>>& rooms);
 private:
 
 	inline static float GetElapsedTime(UWorld* contex) { return contex->GetTimeSeconds(); }

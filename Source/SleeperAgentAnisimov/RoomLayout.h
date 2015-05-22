@@ -1,6 +1,6 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 #include "BaseRoomActor.h"
-
+#include <string>
 
 #pragma once
 
@@ -13,6 +13,7 @@ public:
 	RoomLayout();
 	~RoomLayout();
 
+	std::string filename;
 	bool northDoor;
 	bool eastDoor;
 	bool southDoor;

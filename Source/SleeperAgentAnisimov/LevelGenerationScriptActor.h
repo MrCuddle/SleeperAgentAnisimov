@@ -8,6 +8,7 @@
 #include <queue>
 #include <utility>
 #include <vector>
+#include <string>
 #include "RoomLayout.h"
 #include "LevelGenerationScriptActor.generated.h"
 
@@ -38,6 +39,7 @@ class SLEEPERAGENTANISIMOV_API ALevelGenerationScriptActor : public ALevelScript
 	int layout[levelWidth][levelHeight];
 	ABaseRoomActor* layoutRooms[levelWidth][levelHeight];
 	SearchData layoutSearchData[levelWidth][levelHeight];
+	std::vector<std::vector<std::string>> layoutFileNames;
 	int nRooms;
 	std::queue<std::pair<int, int>> rooms;
 

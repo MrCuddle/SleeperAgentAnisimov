@@ -12,7 +12,7 @@
 #include <assert.h>
 #include <algorithm>
 #include <fstream>
-
+#include "LoggingFunctions.h"
 
 class Visitor : public IPlatformFile::FDirectoryVisitor{
 public:
@@ -60,6 +60,21 @@ void ALevelGenerationScriptActor::LoadRoomLayouts(){
 void ALevelGenerationScriptActor::LoadRoomLayout(FString path){
 
 	RoomLayout *roomLayout = new RoomLayout();
+
+	FString pathStart;
+	FString pathEnd;
+	int index = 0;
+	if (path.FindLastChar('/', index)){
+		roomLayout->filename = TCHAR_TO_UTF8(*path.Right(path.Len() - index));
+	}
+	else
+	{
+		roomLayout->filename = TCHAR_TO_UTF8(*path);
+	}
+
+	
+
+	
 
 	FString text = FString();
 	FFileHelper::LoadFileToString(text, path.GetCharArray().GetData());
@@ -168,6 +183,11 @@ void ALevelGenerationScriptActor::LoadRoomLayout(FString path){
 void ALevelGenerationScriptActor::GenerateLevel(){
 	nRooms = 16;
 	UWorld* const world = GetWorld();
+
+	for (int i = 0; i < levelWidth; ++i){
+		layoutFileNames.push_back(std::vector<string>());
+	}
+
 	if (world){
 
 		PlanLayout();
@@ -374,6 +394,7 @@ void ALevelGenerationScriptActor::GenerateLevel(){
                         else
                             room->orderOfObjectives = -1;
 
+						layoutFileNames[i].push_back(roomLayout->filename);
 						room->StaticMeshes = roomLayout->staticMeshes;
 						room->ItemLocations = roomLayout->itemLocations;
 						room->Guards = roomLayout->guards;
@@ -386,8 +407,14 @@ void ALevelGenerationScriptActor::GenerateLevel(){
 						room->GenerateRoom();
 					}
 				}
+				else {
+					layoutFileNames[i].push_back("none");
+				}
+
 			}
 		}
+
+		ULoggingFunctions::LogLevelLayout(layoutFileNames);
 
 		//Go through the spawned rooms and set up adjacency for their doors
 		for (int i = 0; i < levelWidth; i++)
@@ -456,24 +483,24 @@ void ALevelGenerationScriptActor::PlanLayout(){
 	PlanRegion(0, vSplit, levelWidth - 1, levelHeight - 1, false /*not start*/, door2, vSplit, -1, -1);
 
 
-	FString path;
-	path = FPaths::GameDir();
-	path += "/roomlayout.txt";
+	//FString path;
+	//path = FPaths::GameDir();
+	//path += "/roomlayout.txt";
 
-	//output the layout to a file!
-	//auto out = std::fstream("roomlayout.txt", std::ios_base::out);
+	////output the layout to a file!
+	////auto out = std::fstream("roomlayout.txt", std::ios_base::out);
 
-	std::ofstream stream;
-	stream.open(TCHAR_TO_UTF8(*path), std::ios_base::trunc); 
-	
-	for (int j = 0; j < levelHeight; j++){
-		for (int i= 0; i < levelWidth; i++){
-			stream << layout[i][j] << ",";
-		}
-		stream << std::endl;
-	}
+	//std::ofstream stream;
+	//stream.open(TCHAR_TO_UTF8(*path), std::ios_base::trunc); 
+	//
+	//for (int j = 0; j < levelHeight; j++){
+	//	for (int i= 0; i < levelWidth; i++){
+	//		stream << layout[i][j] << ",";
+	//	}
+	//	stream << std::endl;
+	//}
 
-	stream.close();
+	//stream.close();
 	
 
 }

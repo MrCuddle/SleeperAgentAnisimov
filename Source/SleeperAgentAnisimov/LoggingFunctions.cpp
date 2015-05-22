@@ -52,6 +52,7 @@ bool ULoggingFunctions::StartNewSession()
 	CreateLoggingFile(path + "/Health", "Time\tInstigator\tLocation");
 	CreateLoggingFile(path + "/Deaths", "Time\tLocation");
 	CreateLoggingFile(path + "/ItemPickups", "Time\tItem\tLocation");
+	CreateLoggingFile(path + "/LevelLayout", "Layout");
 
 	sessionInitialized = true;
 	SessionDirectory = path;
@@ -178,4 +179,32 @@ bool ULoggingFunctions::LogItemPickup(AActor* player, AItem* item, FString& Resu
 	SaveLog("ItemPickups", data);
 	Result = data.c_str();
 	return true;
+}
+
+bool ULoggingFunctions::LogLevelLayout(vector<vector<string>>& rooms){
+
+	string data = "";
+	for (int j = 0; j < rooms.size(); j++){
+		for (int i = 0; i < rooms[j].size(); i++){
+			data += rooms[j][i] + "\t\t\t\t\t\t";
+		}
+		data += '\n';
+	}
+
+	data += "\n\n";
+
+	for (int j = 0; j < rooms.size(); j++){
+		for (int i = 0; i < rooms[j].size(); i++){
+			if (rooms[j][i] == "none")
+				data += '0';
+			else
+				data += '#';
+		}
+		data += '\n';
+	}
+
+	SaveLog("LevelLayout", data);
+
+	return true;
+
 }
