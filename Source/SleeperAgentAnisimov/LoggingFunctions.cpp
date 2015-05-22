@@ -53,6 +53,11 @@ bool ULoggingFunctions::StartNewSession()
 	CreateLoggingFile(path + "/Deaths", "Time\tLocation");
 	CreateLoggingFile(path + "/ItemPickups", "Time\tItem\tLocation");
 	CreateLoggingFile(path + "/LevelLayout", "Layout");
+	CreateLoggingFile(path + "/GuardNotice", "Time\tName\tDetectionType");
+	CreateLoggingFile(path + "/ItemSpawned", "Type\tName");
+	CreateLoggingFile(path + "/CabinetsSpawned", "Name");
+	CreateLoggingFile(path + "/CabinetsUsed", "Time\tName");
+	CreateLoggingFile(path + "/GuardDeaths", "Time\tName");
 
 	sessionInitialized = true;
 	SessionDirectory = path;
@@ -204,6 +209,76 @@ bool ULoggingFunctions::LogLevelLayout(vector<vector<string>>& rooms){
 	}
 
 	SaveLog("LevelLayout", data);
+
+	return true;
+
+}
+
+
+bool ULoggingFunctions::LogGuardNoticePlayer(AActor* guard, bool sawPlayer, FString& result)
+{
+	if (guard == NULL)
+	{
+		return false;
+	}
+	string data = to_string(GetElapsedTime(guard));
+	data += '\t';
+	data += TCHAR_TO_UTF8(*guard->GetName());
+	data += '\t';
+	data += sawPlayer ? "Vision" : "Hearing";
+	SaveLog("GuardNotice", data);
+	return true;
+}
+
+bool ULoggingFunctions::LogSpawnedItem(AItem* item, FString& result)
+{
+	if (item == NULL)
+	{
+		return false;
+	}
+	string data = TCHAR_TO_UTF8(*item->Name);
+	string name = TCHAR_TO_UTF8(*item->GetName());
+	data += '\t';
+	data += name;
+	SaveLog("ItemSpawned", data);
+	return true;
+
+}
+
+bool ULoggingFunctions::LogSpawnedFilingCabinets(AItem* cabinet, FString& result)
+{
+	if (cabinet == NULL)
+	{
+		return false;
+	}
+	string data = TCHAR_TO_UTF8(*cabinet->GetName());
+	SaveLog("CabinetsSpawned", data);
+	return true;
+}
+
+bool ULoggingFunctions::LogFilingCabinetsUsed(AItem* cabinet, FString& result)
+{
+	if (cabinet == NULL)
+	{
+		return false;
+	}
+	string data = to_string(GetElapsedTime(cabinet));
+	data += '\t';
+	data += TCHAR_TO_UTF8(*cabinet->GetName());
+	SaveLog("CabinetsUsed", data);
+	return true;
+}
+
+bool ULoggingFunctions::LogGuardDeath(AActor* guard, FString& result)
+{
+	if (guard == NULL)
+	{
+		return false;
+	}
+	string data = to_string(GetElapsedTime(guard));
+	data += '\t';
+	data += TCHAR_TO_UTF8(*guard->GetName());
+	SaveLog("GuardDeaths", data);
 
 	return true;
 

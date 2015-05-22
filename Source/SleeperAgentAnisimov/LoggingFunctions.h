@@ -36,6 +36,21 @@ public:
 
 	UFUNCTION(BlueprintCallable, meta = (HidePin = "WorldContextObject", DefaultToSelf = "WorldContextObject", FriendlyName = "LogItemPickup"), Category = "StaniLogging")
 		static bool LogItemPickup(AActor* player, AItem* item, FString& Result);
+
+	UFUNCTION(BlueprintCallable, meta = (HidePin = "WorldContextObject", DefaultToSelf = "WorldContextObject", FriendlyName = "LogGuardNoticePlayer"), Category = "StaniLogging")
+		static bool LogGuardNoticePlayer(AActor* guard, bool sawPlayer, FString& Result);
+
+	UFUNCTION(BlueprintCallable, meta = (HidePin = "WorldContextObject", DefaultToSelf = "WorldContextObject", FriendlyName = "LogSpawnedItem"), Category = "StaniLogging")
+		static bool LogSpawnedItem(AItem* item, FString& Result);
+
+	UFUNCTION(BlueprintCallable, meta = (HidePin = "WorldContextObject", DefaultToSelf = "WorldContextObject", FriendlyName = "LogSpawnedFilingCabinets"), Category = "StaniLogging")
+		static bool LogSpawnedFilingCabinets(AItem* cabinet, FString& Result);
+
+	UFUNCTION(BlueprintCallable, meta = (HidePin = "WorldContextObject", DefaultToSelf = "WorldContextObject", FriendlyName = "LogFilingCabinetsUsed"), Category = "StaniLogging")
+		static bool LogFilingCabinetsUsed(AItem* cabinet, FString& Result);
+
+	UFUNCTION(BlueprintCallable, meta = (HidePin = "WorldContextObject", DefaultToSelf = "WorldContextObject", FriendlyName = "LogGuardDeath"), Category = "StaniLogging")
+		static bool LogGuardDeath(AActor* guard, FString& Result);
 	
 		static bool LogLevelLayout(vector<vector<string>>& rooms);
 private:
