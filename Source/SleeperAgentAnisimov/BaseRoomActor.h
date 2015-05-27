@@ -21,10 +21,14 @@ struct FGuardStruct{
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Level Generation")
 	int32 startIndex;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Level Generation")
+	float rotation;
+
 	FGuardStruct(){
 		patrolRouteIndex = -1;
 		startIndex = 0;
 		spawnLocation = FVector2D();
+		rotation = 0.0;
 	}
 
 };

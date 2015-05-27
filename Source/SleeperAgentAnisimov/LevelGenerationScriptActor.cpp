@@ -122,6 +122,7 @@ void ALevelGenerationScriptActor::LoadRoomLayout(FString path){
 				g.patrolRouteIndex = guards[j]->AsObject()->GetNumberField("patrolRouteIndex");
 				g.startIndex = (int)guards[j]->AsObject()->GetNumberField("startIndex");
 				g.spawnLocation = FVector2D(guards[j]->AsObject()->GetNumberField("x"), guards[j]->AsObject()->GetNumberField("y"));
+				g.rotation = guards[j]->AsObject()->GetNumberField("rotation");
 				roomLayout->guards.Add(g);
 			}
 			TArray<TSharedPtr<FJsonValue>> items = spawnGroups[i]->AsObject()->GetArrayField("items");
@@ -308,7 +309,7 @@ void ALevelGenerationScriptActor::GenerateLevel(){
 					}
 
 					//Try to pick rooms with fewer doors, if possible
-					if (j + 1 >= levelHeight || layout[i][j + 1] <= 0)
+					/*if (j + 1 >= levelHeight || layout[i][j + 1] <= 0)
 					{
 						std::vector<RoomLayout*> newOutput;
 						std::set_difference(outputSet.begin(), outputSet.end(), southRooms.begin(), southRooms.end(), std::back_inserter(newOutput));
@@ -335,7 +336,7 @@ void ALevelGenerationScriptActor::GenerateLevel(){
 						std::set_difference(outputSet.begin(), outputSet.end(), northRooms.begin(), northRooms.end(), std::back_inserter(newOutput));
 						if (newOutput.size() > 0)
 							outputSet = newOutput;
-					}
+					}*/
 
 					RoomLayout* roomLayout = outputSet[rand() % outputSet.size()];
 
